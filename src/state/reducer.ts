@@ -14,7 +14,7 @@ export function findEmotionReducer(
         const exists = state.selectedEmotionIds.includes(action.id);
         const selectedEmotionIds = exists
           ? state.selectedEmotionIds.filter((id) => id !== action.id)
-          : state.selectedEmotionIds.length >= 3
+          : state.selectedEmotionIds.length >= 7 
             ? state.selectedEmotionIds
             : [...state.selectedEmotionIds, action.id];
   

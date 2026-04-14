@@ -29,10 +29,6 @@ export const emotions = [
     name: 'Anxiety',
   },
   {
-    id: "overwhelming",
-    name: 'Overwhelming',
-  },
-  {
     id: "irritation",
     name: 'Irritation',
   },
@@ -91,6 +87,14 @@ export const emotions = [
   {
     id: "betrayal",
     name: 'Betrayal',
+  },
+  {
+    id: "unworthiness",
+    name: "Unworthiness",
+  },
+  {
+    id: "envy",
+    name: "Envy",
   },
 ] as const;
 
