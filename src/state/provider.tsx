@@ -8,6 +8,7 @@ const initialState: FindEmotionState = {
   currentStep: "welcome",
   selectedStateIds: [],
   selectedEmotionIds: [],
+  strongestEmotionIds: [],
   direction: 1,
 };
 

@@ -1,5 +1,5 @@
 const baseClasses =
-  'w-full py-[16px] px-[16px] text-center rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 active:scale-[0.99]'
+  'w-full py-[16px] px-[16px] text-center text-[clamp(12px,3.26vw,15px)] rounded-full transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 active:scale-[0.99]'
 
 const unselectedClasses =
   'bg-surface text-text-primary hover:bg-surface-hover active:bg-surface-active'

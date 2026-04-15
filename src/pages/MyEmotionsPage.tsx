@@ -13,10 +13,10 @@ export function MyEmotionsPage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <p className="mt-4 mb-10 text-center text-base text-text-primary">
+      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
         STEP 2: MY EMOTIONS
-      </p>
-      <h1 className="mb-7 text-center text-[48px] font-normal leading-none tracking-tighter text-text-heading">
+      </div>
+      <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       What feels closest right now?
       </h1>
       <p className="mb-4 text-base text-text-primary">Pick what feels closest</p>
@@ -37,7 +37,8 @@ export function MyEmotionsPage() {
       <div className="mt-8">
         <PrimaryButton
           label="Continue"
-          onClick={() => pushPage('example-next')}
+          onClick={() => pushPage('refined-emotions')}
+          disabled={selectedEmotionIds.length === 0}
         />
       </div>
     </PageSection>

@@ -14,10 +14,10 @@ export function MyStatePage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <p className="mt-4 mb-10 text-center text-base text-text-primary">
+      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
         STEP 1: MY STATE
-      </p>
-      <h1 className="text-[48px] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
+      </div>
+      <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
         How do you feel right now?
       </h1>
       <p className="text-base text-text-primary mb-4">
@@ -39,6 +39,7 @@ export function MyStatePage() {
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('my-emotions')}
+          disabled={selectedStateIds.length === 0}
         />
       </div>
     </PageSection>
