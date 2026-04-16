@@ -71,11 +71,20 @@ const slideVariants = {
   }),
 }
 
+const pageMetaTitleById: Record<PageId, string> = {
+  welcome: 'Find the Emotion',
+  'my-state': 'Find the Emotion · What feels closest right now?',
+  'my-emotions': 'Find the Emotion · What feels true for you right now?',
+  'refined-emotions': 'Find the Emotion · Which feels the strongest?',
+  summary: 'Find the Emotion · What feels strongest right now is',
+}
+
 export function PageStackProvider({ children }: { children: ReactNode }) {
   const [stack, setStack] = useState<PageId[]>([INITIAL_PAGE_ID])
   const [direction, setDirection] = useState<Direction>(1)
   const stackRef = useRef(stack)
   stackRef.current = stack
+  const currentPageId = stack[stack.length - 1] ?? INITIAL_PAGE_ID
 
   useLayoutEffect(() => {
     const fromHistory = readStackFromHistory()
@@ -106,6 +115,10 @@ export function PageStackProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
 
+  useEffect(() => {
+    document.title = pageMetaTitleById[currentPageId]
+  }, [currentPageId])
+
   const pushPage = useCallback((id: PageId) => {
     if (!isRegisteredPageId(id)) return
     const next = [...stackRef.current, id]
@@ -125,7 +138,6 @@ export function PageStackProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<PageStackContextValue>(() => {
-    const currentPageId = stack[stack.length - 1]!
     return {
       currentPageId,
       stackKey: stack.join('/'),
@@ -134,7 +146,7 @@ export function PageStackProvider({ children }: { children: ReactNode }) {
       pushPage,
       popPage,
     }
-  }, [stack, direction, pushPage, popPage])
+  }, [currentPageId, stack, direction, pushPage, popPage])
 
   return (
     <PageStackContext.Provider value={value}>{children}</PageStackContext.Provider>
