@@ -10,11 +10,16 @@ export function WelcomePage() {
 
   return (
     <PageSection>
-      <img
-        src={heartWelcome}
-        alt="Pastel cloud of color with a glowing heart at the center"
-        className="mx-auto block h-auto w-full max-w-[270px]"
-      />
+      <div className="mx-auto h-[270px] w-[270px]">
+        <img
+          src={heartWelcome}
+          alt="Pastel cloud of color with a glowing heart at the center"
+          width={270}
+          height={270}
+          className="block h-full w-full object-contain opacity-0 transition-opacity duration-300"
+          onLoad={(e) => (e.currentTarget as HTMLImageElement).classList.remove("opacity-0")}
+        />
+      </div>
       <h1 className="mt-2 text-center text-[64px] capitalize font-normal leading-tight tracking-[-4.8px] text-text-heading">
         Find the emotion
       </h1>
