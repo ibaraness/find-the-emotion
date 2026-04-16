@@ -1,5 +1,3 @@
-import { ExampleNextPage } from '../pages/ExampleNextPage'
-import { ExampleThirdPage } from '../pages/ExampleThirdPage'
 import { MyEmotionsPage } from '../pages/MyEmotionsPage'
 import { MyStatePage } from '../pages/MyStatePage'
 import { RefinedEmotionsPage } from '../pages/RefinedEmotionsPage'
@@ -16,8 +14,6 @@ export const pageRegistry = {
   'my-emotions': MyEmotionsPage,
   'refined-emotions': RefinedEmotionsPage,
   summary: SummaryPage,
-  'example-next': ExampleNextPage,
-  'example-third': ExampleThirdPage,
 } as const satisfies Record<string, PageComponent>
 
 export type PageId = keyof typeof pageRegistry

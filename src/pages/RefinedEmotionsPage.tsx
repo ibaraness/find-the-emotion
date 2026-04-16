@@ -32,10 +32,10 @@ export function RefinedEmotionsPage() {
         STEP 3: REFINED EMOTIONS
       </div>
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
-        Which feels the strongest?
+      Which feels the strongest?
       </h1>
       <div className="mb-4 text-base text-text-primary">
-        Tap up to 3 in order of intensity.
+      Pick up to 3, starting with what feels strongest
       </div>
       <div className="mt-8 px-5 flex flex-col gap-4">
         <AnimatePresence initial={false} mode="popLayout">
@@ -85,12 +85,13 @@ export function RefinedEmotionsPage() {
             </motion.div>
           ))}
         </AnimatePresence>
-        {/* <AddEmotionRow label="Powerlessness" onAddition={() => {}} /> */}
+
       </div>
       <div className="mt-8">
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('summary')}
+          disabled={strongestEmotionIds.length === 0}
         />
       </div>
     </PageSection>

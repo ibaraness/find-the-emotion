@@ -6,7 +6,6 @@ import { usePageStack } from '@/navigation/PageStackContext'
 import { states } from '@/config/states'
 import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
 
-/** Skeleton for the “my state” step — replace content as you build the flow. */
 export function MyStatePage() {
   const { pushPage } = usePageStack()
   const { selectedStateIds } = useFindEmotionState();
@@ -18,10 +17,10 @@ export function MyStatePage() {
         STEP 1: MY STATE
       </div>
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
-        How do you feel right now?
+      What feels closest right now?
       </h1>
       <p className="text-base text-text-primary mb-4">
-        Pick what feels closest
+      Go with your first instinct
       </p>
       {states.map((state) => (
         <div key={state.id} className="px-4 py-2">
@@ -32,9 +31,6 @@ export function MyStatePage() {
           />
         </div>
       ))}
-      <p className="mt-4 text-base text-text-primary">
-        Page shell — add your UI here.
-      </p>
       <div className="mt-8">
         <PrimaryButton
           label="Continue"

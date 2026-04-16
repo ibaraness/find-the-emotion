@@ -1,4 +1,4 @@
-import { ChevronLeft, CircleUser } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { usePageStack } from '@/navigation/PageStackContext'
 
 export function AppHeader() {
@@ -23,13 +23,6 @@ export function AppHeader() {
           Find the emotion
         </span>
       </div>
-      <button
-        type="button"
-        aria-label="User profile"
-        className="rounded-full p-1 text-primary transition-colors hover:text-primary-hover active:text-primary-active"
-      >
-        <CircleUser size={28} />
-      </button>
     </header>
   )
 }
