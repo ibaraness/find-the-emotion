@@ -1,3 +1,4 @@
+import { IntroPage } from '../pages/IntroPage'
 import { MyEmotionsPage } from '../pages/MyEmotionsPage'
 import { MyStatePage } from '../pages/MyStatePage'
 import { RefinedEmotionsPage } from '../pages/RefinedEmotionsPage'
@@ -10,6 +11,7 @@ import type { PageComponent } from './types'
  */
 export const pageRegistry = {
   welcome: WelcomePage,
+  intro: IntroPage,
   'my-state': MyStatePage,
   'my-emotions': MyEmotionsPage,
   'refined-emotions': RefinedEmotionsPage,
