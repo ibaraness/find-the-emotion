@@ -6,7 +6,7 @@ export function AppHeader() {
 
   return (
     <header
-      className="flex h-[80px] w-full items-center justify-between bg-white px-4 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]"
+      className="flex h-[80px] w-full shrink-0 items-center justify-between bg-white px-4 shadow-[0_0_4px_0_rgba(0,0,0,0.25)]"
       role="banner"
     >
       <div className="flex min-w-0 flex-1 items-center gap-2">
