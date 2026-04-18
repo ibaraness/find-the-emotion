@@ -1,0 +1,9 @@
+# Apache: SPA fallback for this app (Vite base: /find-the-emotion/app/)
+# Copied into dist/ on every production build (see vite.config.ts).
+
+RewriteEngine On
+RewriteBase /find-the-emotion/app/
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /find-the-emotion/app/index.html [L]
