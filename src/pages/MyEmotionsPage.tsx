@@ -1,3 +1,4 @@
+import { Breadcrumb } from '@/components/Breadcrumb'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
@@ -12,14 +13,12 @@ export function MyEmotionsPage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
-        STEP 2: MY EMOTIONS
-      </div>
+      <Breadcrumb label="STEP 2: MY EMOTIONS" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       What feels true for you right now?
       </h1>
       <p className="mb-4 text-base text-text-primary">You can choose more than one</p>
-      <div className="grid w-full grid-cols-2 gap-x-3 gap-y-2">
+      <div className="grid w-full grid-cols-2 gap-x-3 gap-y-2 mt-2">
         {emotions.map((emotion) => (
           <div key={emotion.id} className="min-w-0">
             <SelectableChip

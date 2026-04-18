@@ -1,4 +1,4 @@
-
+import { Breadcrumb } from '@/components/Breadcrumb'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
@@ -13,9 +13,7 @@ export function MyStatePage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
-        STEP 1: MY STATE
-      </div>
+      <Breadcrumb label="STEP 1: MY STATE" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
       What feels closest right now?
       </h1>

@@ -20,7 +20,7 @@ export function AppHeader() {
           <ChevronLeft size={24} />
         </button>
         <span className="truncate font-sans text-[24px] leading-none text-text-heading">
-          Find the emotion
+          Find The Emotion
         </span>
       </div>
     </header>

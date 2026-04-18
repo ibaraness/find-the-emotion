@@ -1,3 +1,4 @@
+import { Breadcrumb } from '@/components/Breadcrumb'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { RankedEmotionSlot } from '@/components/RankedEmotionSlot'
@@ -28,9 +29,7 @@ export function RefinedEmotionsPage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
-        STEP 3: REFINED EMOTIONS
-      </div>
+      <Breadcrumb label="STEP 3: REFINED EMOTIONS" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       Which feels the strongest?
       </h1>

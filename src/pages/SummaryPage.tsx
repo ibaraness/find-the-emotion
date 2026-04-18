@@ -1,3 +1,4 @@
+import { Breadcrumb } from '@/components/Breadcrumb'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { emotions } from '@/config/emotions'
@@ -14,9 +15,7 @@ export function SummaryPage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
-        STEP 4: SUMMARY
-      </div>
+      <Breadcrumb label="STEP 4: SUMMARY" />
       <h1 className="mb-[clamp(30px,12vw,80px)] text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       What feels strongest right now is
       </h1>
@@ -40,7 +39,7 @@ export function SummaryPage() {
           </div>
         </div>
       ) : null}
-      <div className="mt-8">
+      <div className="mt-12">
         <PrimaryButton
           label="Start over"
           onClick={() => pushPage('welcome')}
