@@ -34,7 +34,7 @@ export function RefinedEmotionsPage() {
       Which feels the strongest?
       </h1>
       <div className="mb-4 text-base text-text-primary">
-      Pick up to 3, starting with what feels strongest
+      Choose up to 3 that feel strongest. No need to rank yet.
       </div>
       <div className="mt-8 px-5 flex flex-col gap-4">
         <AnimatePresence initial={false} mode="popLayout">
@@ -89,7 +89,7 @@ export function RefinedEmotionsPage() {
       <div className="mt-8">
         <PrimaryButton
           label="Continue"
-          onClick={() => pushPage('summary')}
+          onClick={() => pushPage('strongest-emotion')}
           disabled={strongestEmotionIds.length === 0}
         />
       </div>

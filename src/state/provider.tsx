@@ -9,6 +9,7 @@ const initialState: FindEmotionState = {
   selectedStateIds: [],
   selectedEmotionIds: [],
   strongestEmotionIds: [],
+  strongestSinglePickId: null,
   direction: 1,
 };
 

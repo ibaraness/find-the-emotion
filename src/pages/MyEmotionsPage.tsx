@@ -17,7 +17,7 @@ export function MyEmotionsPage() {
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       What feels true for you right now?
       </h1>
-      <p className="mb-4 text-base text-text-primary">You can choose more than one</p>
+      <p className="mb-4 text-base text-text-primary">You may be drawn to more than one. Choose what feels true. We’ll narrow it next.</p>
       <div className="grid w-full grid-cols-2 gap-x-3 gap-y-2 mt-2">
         {emotions.map((emotion) => (
           <div key={emotion.id} className="min-w-0">

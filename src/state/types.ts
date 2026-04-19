@@ -5,12 +5,15 @@ export type FindEmotionState = {
     selectedStateIds: string[];
     selectedEmotionIds: string[];
     strongestEmotionIds: string[];
+    /** The strongest pick among refined `strongestEmotionIds` (StrongestEmotionPage). */
+    strongestSinglePickId: string | null;
     direction: 1 | -1;
 };
 
 export type FindEmotionAction =
   | { type: "toggle_state"; id: string }
   | { type: "toggle_emotion"; id: string }
+  | { type: "set_strongest_single"; id: string }
   | { type: "add_strong_emotion"; id: string }
   | { type: "move_up_emotion"; id: string }
   | { type: "move_down_emotion"; id: string }

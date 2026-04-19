@@ -21,6 +21,11 @@ export function findEmotionReducer(
         return { ...state, selectedEmotionIds };
       }
 
+      case "set_strongest_single": {
+        if (!state.strongestEmotionIds.includes(action.id)) return state;
+        return { ...state, strongestSinglePickId: action.id };
+      }
+
       case "add_strong_emotion": {
         const exists = state.strongestEmotionIds.includes(action.id);
         const strongestEmotionIds = exists
@@ -96,7 +101,7 @@ export function findEmotionReducer(
         return { ...state, selectedEmotionIds: [] };
   
       case "clear_strong_emotions":
-        return { ...state, strongestEmotionIds: [] };
+        return { ...state, strongestEmotionIds: [], strongestSinglePickId: null };
   
       default:
         return state;

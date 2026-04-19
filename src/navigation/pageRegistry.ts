@@ -2,6 +2,7 @@ import { IntroPage } from '../pages/IntroPage'
 import { MyEmotionsPage } from '../pages/MyEmotionsPage'
 import { MyStatePage } from '../pages/MyStatePage'
 import { RefinedEmotionsPage } from '../pages/RefinedEmotionsPage'
+import { StrongestEmotionPage } from '../pages/StrongestEmotionPage'
 import { SummaryPage } from '../pages/SummaryPage'
 import { WelcomePage } from '../pages/WelcomePage'
 import type { PageComponent } from './types'
@@ -15,6 +16,7 @@ export const pageRegistry = {
   'my-state': MyStatePage,
   'my-emotions': MyEmotionsPage,
   'refined-emotions': RefinedEmotionsPage,
+  'strongest-emotion': StrongestEmotionPage,
   summary: SummaryPage,
 } as const satisfies Record<string, PageComponent>
 

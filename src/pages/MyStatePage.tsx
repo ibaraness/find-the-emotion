@@ -15,10 +15,10 @@ export function MyStatePage() {
     <PageSection padding="narrow" textCenter>
       <Breadcrumb label="STEP 1: MY STATE" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
-      What feels closest right now?
+      What are you feeling right now?
       </h1>
       <p className="text-base text-text-primary mb-4">
-      Go with your first instinct
+      You may feel more than one thing. Start broad. We’ll narrow it next.
       </p>
       {states.map((state) => (
         <div key={state.id} className="px-4 py-2">
