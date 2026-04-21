@@ -45,7 +45,7 @@ export function SummaryPage() {
           </div>
         </div>
       ) : null}
-      <div className="mt-12">
+      <div className="mt-12 pb-20">
         <PrimaryButton
           label="Start over"
           onClick={() => pushPage('welcome')}

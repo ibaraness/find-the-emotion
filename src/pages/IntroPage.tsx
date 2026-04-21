@@ -4,7 +4,7 @@ import { ProcessFlow } from '@/components/ProcessFlow'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { usePageStack } from '@/navigation/PageStackContext'
 import distortedHeartSmall from '@/assets/distorted-heart-small.webp'
-import { Heart, Wind, Sparkles, Gauge, MapPin} from 'lucide-react'
+import { Wind, Sparkles, Gauge, MapPin} from 'lucide-react'
 
 /** Short intro before the state step — replace copy as you refine the flow. */
 export function IntroPage() {
@@ -45,7 +45,7 @@ export function IntroPage() {
       <p className="mb-12 text-base italic font-light leading-[2rem] text-text-primary">
       This is about clarity, not solutions.
       </p>
-      <div className="mt-8">
+      <div className="mt-8 pb-20">
         <PrimaryButton label="Continue" onClick={() => pushPage('my-state')} />
       </div>
     </PageSection>

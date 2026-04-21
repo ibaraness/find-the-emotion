@@ -30,7 +30,7 @@ export function WelcomePage() {
       Not for solutions. Just for clarity.
       </p>
 
-      <div className="mt-12">
+      <div className="mt-12 pb-20">
         <PrimaryButton
           label="Start"
           onClick={() => {

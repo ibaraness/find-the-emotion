@@ -29,7 +29,7 @@ export function MyEmotionsPage() {
           </div>
         ))}
       </div>
-      <div className="mt-8">
+      <div className="mt-8 pb-20">
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('refined-emotions')}
