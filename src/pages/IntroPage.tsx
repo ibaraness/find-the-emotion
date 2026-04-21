@@ -1,8 +1,10 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
 import { PageSection } from '@/components/PageSection'
+import { ProcessFlow } from '@/components/ProcessFlow'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { usePageStack } from '@/navigation/PageStackContext'
 import distortedHeartSmall from '@/assets/distorted-heart-small.webp'
+import { Heart } from 'lucide-react'
 
 /** Short intro before the state step — replace copy as you refine the flow. */
 export function IntroPage() {
@@ -30,6 +32,16 @@ export function IntroPage() {
       <h2 className="text-center mb-7 text-[clamp(24px,6.5vw,35px)] font-normal leading-none tracking-tighter text-text-heading">
         How this works
       </h2>
+      <div className="mb-8 px-4">
+        <ProcessFlow
+          steps={[
+            { stepNumber: '1', label: 'Begin with a general feeling', icon: <Heart /> },
+            { stepNumber: '2', label: 'Narrow it down step by step', icon: <Heart /> },
+            { stepNumber: '3', label: 'Choose the emotions that feel strongest', icon: <Heart /> },
+            { stepNumber: '4', label: 'Focus on what stands out most', icon: <Heart /> },
+          ]}
+        />
+      </div>
       <ul className="mb-8 list-outside list-disc pl-12 pr-10 text-left">
         <li className="mb-4">We'll begin with a general feeling</li>
         <li className="mb-4">Narrow it down step by step</li>
