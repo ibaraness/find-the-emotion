@@ -31,7 +31,7 @@ export function RefinedEmotionsPage() {
     <PageSection padding="narrow" textCenter>
       <Breadcrumb label="STEP 3: REFINED EMOTIONS" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
-      Which feels the strongest?
+      Narrow it down
       </h1>
       <div className="mb-4 text-base text-text-primary">
       Choose up to 3 that feel strongest. No need to rank yet.

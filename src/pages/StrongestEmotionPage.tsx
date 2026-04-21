@@ -19,7 +19,7 @@ export function StrongestEmotionPage() {
     <PageSection padding="narrow" textCenter>
       <Breadcrumb label="STEP 4: STRONGEST EMOTION" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-10 text-text-heading">
-        Which feels strongest right now?
+      Which one stands out most right now?
       </h1>
       <p className="text-base text-text-primary mb-8">
         If one stands out a bit more, which one would it be?

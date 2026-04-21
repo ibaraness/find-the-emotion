@@ -4,7 +4,7 @@ import { ProcessFlow } from '@/components/ProcessFlow'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { usePageStack } from '@/navigation/PageStackContext'
 import distortedHeartSmall from '@/assets/distorted-heart-small.webp'
-import { Heart } from 'lucide-react'
+import { Heart, Wind, Sparkles, Gauge, MapPin} from 'lucide-react'
 
 /** Short intro before the state step — replace copy as you refine the flow. */
 export function IntroPage() {
@@ -35,20 +35,14 @@ export function IntroPage() {
       <div className="mb-8 px-4">
         <ProcessFlow
           steps={[
-            { stepNumber: '1', label: 'Begin with a general feeling', icon: <Heart /> },
-            { stepNumber: '2', label: 'Narrow it down step by step', icon: <Heart /> },
-            { stepNumber: '3', label: 'Choose the emotions that feel strongest', icon: <Heart /> },
-            { stepNumber: '4', label: 'Focus on what stands out most', icon: <Heart /> },
+            { stepNumber: '1', label: 'Begin with a general feeling', icon: <Wind /> },
+            { stepNumber: '2', label: 'Choose the emotions that feel right', icon: <Sparkles /> },
+            { stepNumber: '3', label: 'Narrow it down to a few that feel strongest', icon: <Gauge /> },
+            { stepNumber: '4', label: 'Notice which one stands out most', icon: <MapPin /> },
           ]}
         />
       </div>
-      <ul className="mb-8 list-outside list-disc pl-12 pr-10 text-left">
-        <li className="mb-4">We'll begin with a general feeling</li>
-        <li className="mb-4">Narrow it down step by step</li>
-        <li className="mb-4">Choose the emotions that feel strongest</li>
-        <li className="mb-4">Focus on what stands out most</li>
-      </ul>
-      <p className="mb-12 text-base leading-[2rem] text-text-primary">
+      <p className="mb-12 text-base italic font-light leading-[2rem] text-text-primary">
       This is about clarity, not solutions.
       </p>
       <div className="mt-8">
