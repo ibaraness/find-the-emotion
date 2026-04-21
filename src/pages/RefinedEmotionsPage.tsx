@@ -50,6 +50,7 @@ export function RefinedEmotionsPage() {
               <RankedEmotionSlot
                 rank={getRank(index)}
                 emotionLabel={emotionId ? emotions.find((emotion) => emotion.id === emotionId)?.name ?? '' : ''}
+                showArrowButtons={false}
                 onSelectEmotion={() => {}}
                 onRemove={() => {
                   if (emotionId) dispatch({ type: 'remove_strong_emotion', id: emotionId })
