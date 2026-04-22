@@ -13,7 +13,7 @@ export function MyStatePage() {
   const dispatch = useFindEmotionDispatch();
 
   return (
-    <PageSection padding="narrow" textCenter className="!pb-[180px] md:!pb-20">
+    <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
       <Breadcrumb label="STEP 1: MY STATE" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
       What are you feeling right now?

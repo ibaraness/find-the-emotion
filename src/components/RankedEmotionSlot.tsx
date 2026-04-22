@@ -74,6 +74,7 @@ export function RankedEmotionSlot({
 
       {hasSelection ? (
         <button
+        
           type="button"
           disabled={disabled}
           aria-label="Remove emotion slot"

@@ -12,7 +12,7 @@ export function IntroPage() {
   const { pushPage } = usePageStack()
 
   return (
-    <PageSection padding="narrow" textCenter className="!pb-[180px] md:!pb-20">
+    <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
       <Breadcrumb label="INTRO" marginBottomClassName='mb-4' />
       <div className="mx-auto h-[70px] w-[70px] mb-4">
         <img
@@ -52,6 +52,7 @@ export function IntroPage() {
       <div className="mt-8 hidden pb-20 pt-8 md:block">
         <PrimaryButton label="Continue" onClick={() => pushPage('my-state')} />
       </div>
+     
     </PageSection>
   )
 }

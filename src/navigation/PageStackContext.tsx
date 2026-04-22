@@ -161,7 +161,7 @@ export function PageStackOutlet() {
   const Page = pageRegistry[currentPageId]
 
   return (
-    <div className="relative min-h-0 flex-1 overflow-hidden flex h-[100svh] flex-col md:h-[100dvh]">
+    <div className="relative min-h-0 flex-1 overflow-hidden">
       <AnimatePresence initial={false} custom={navigationDirection}>
         <motion.div
           key={stackKey}
@@ -172,9 +172,11 @@ export function PageStackOutlet() {
           animate="center"
           exit="exit"
           transition={slideTransition}
-          className="absolute inset-0 flex min-h-0 flex-col overflow-y-auto bg-transparent"
+          className="absolute inset-0 flex min-h-0 flex-col bg-transparent"
         >
-          <Page />
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <Page />
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>

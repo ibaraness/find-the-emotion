@@ -29,7 +29,7 @@ export function RefinedEmotionsPage() {
   );
 
   return (
-    <PageSection padding="narrow" textCenter className="!pb-[180px] md:!pb-20">
+    <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
       <Breadcrumb label="STEP 3: REFINED EMOTIONS" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       Narrow it down
