@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
+import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { ProcessFlow } from '@/components/ProcessFlow'
 import { PrimaryButton } from '@/components/PrimaryButton'
@@ -11,7 +12,7 @@ export function IntroPage() {
   const { pushPage } = usePageStack()
 
   return (
-    <PageSection padding="narrow" textCenter>
+    <PageSection padding="narrow" textCenter className="!pb-[180px] md:!pb-20">
       <Breadcrumb label="INTRO" marginBottomClassName='mb-4' />
       <div className="mx-auto h-[70px] w-[70px] mb-4">
         <img
@@ -45,7 +46,10 @@ export function IntroPage() {
       <p className="mb-12 text-base italic font-light leading-[2rem] text-text-primary">
       This is about clarity, not solutions.
       </p>
-      <div className="mt-8 pb-20">
+      <MobileBottomAction position="fixed">
+        <PrimaryButton label="Continue" onClick={() => pushPage('my-state')} />
+      </MobileBottomAction>
+      <div className="mt-8 hidden pb-20 pt-8 md:block">
         <PrimaryButton label="Continue" onClick={() => pushPage('my-state')} />
       </div>
     </PageSection>

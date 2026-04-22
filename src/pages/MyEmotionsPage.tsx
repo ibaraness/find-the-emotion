@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
+import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
@@ -12,7 +13,7 @@ export function MyEmotionsPage() {
   const dispatch = useFindEmotionDispatch()
 
   return (
-    <PageSection padding="narrow" textCenter>
+    <PageSection padding="narrow" textCenter className="!pb-[180px] md:!pb-20">
       <Breadcrumb label="STEP 2: MY EMOTIONS" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       What feels true for you right now?
@@ -29,7 +30,14 @@ export function MyEmotionsPage() {
           </div>
         ))}
       </div>
-      <div className="mt-8 pb-20">
+      <MobileBottomAction position="fixed">
+        <PrimaryButton
+          label="Continue"
+          onClick={() => pushPage('refined-emotions')}
+          disabled={selectedEmotionIds.length === 0}
+        />
+      </MobileBottomAction>
+      <div className="mt-8 hidden pb-20 md:block">
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('refined-emotions')}

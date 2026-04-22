@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
+import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
@@ -12,7 +13,7 @@ export function MyStatePage() {
   const dispatch = useFindEmotionDispatch();
 
   return (
-    <PageSection padding="narrow" textCenter>
+    <PageSection padding="narrow" textCenter className="!pb-[180px] md:!pb-20">
       <Breadcrumb label="STEP 1: MY STATE" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
       What are you feeling right now?
@@ -29,7 +30,14 @@ export function MyStatePage() {
           />
         </div>
       ))}
-      <div className="mt-8 pb-20">
+      <MobileBottomAction position="fixed">
+        <PrimaryButton
+          label="Continue"
+          onClick={() => pushPage('my-emotions')}
+          disabled={selectedStateIds.length === 0}
+        />
+      </MobileBottomAction>
+      <div className="mt-8 hidden pb-20 md:block">
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('my-emotions')}
