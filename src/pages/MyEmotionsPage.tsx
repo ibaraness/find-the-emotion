@@ -6,17 +6,42 @@ import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
 import { getActivePass, useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import type { Pass } from '@/state/types'
+
+function primaryStrongestEmotionName(pass: Pass): string {
+  const id =
+    pass.strongestSinglePickId ??
+    (pass.strongestEmotionIds.length === 1
+      ? pass.strongestEmotionIds[0]
+      : null) ??
+    pass.strongestEmotionIds[0] ??
+    null
+  if (!id) return ''
+  return emotions.find((e) => e.id === id)?.name ?? ''
+}
 
 export function MyEmotionsPage() {
   const { pushPage } = usePageStack()
-  const { selectedEmotionIds } = getActivePass(useFindEmotionState())
+  const state = useFindEmotionState()
+  const { selectedEmotionIds } = getActivePass(state)
+  const { activePass, passes } = state
   const dispatch = useFindEmotionDispatch()
+
+  const isFollowUpPass = activePass > 0
+  const previousPass = isFollowUpPass ? passes[activePass - 1] : undefined
+  const previousPassName = previousPass
+    ? primaryStrongestEmotionName(previousPass)
+    : ''
+  const heading =
+    isFollowUpPass && previousPassName
+      ? `If you rewind a bit… what was there before ${previousPassName}?`
+      : 'What feels true for you right now?'
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
       <Breadcrumb label="STEP 2: MY EMOTIONS" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
-      What feels true for you right now?
+        {heading}
       </h1>
       <p className="mb-4 text-base text-text-primary">You may be drawn to more than one. Choose what feels true. We’ll narrow it next.</p>
       <div className="grid w-full grid-cols-2 gap-x-3 gap-y-2 mt-2">
