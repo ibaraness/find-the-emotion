@@ -12,7 +12,7 @@ import {
 
 /** Summary step scaffold — replace content as you build the final screen. */
 export function SummaryPage() {
-  const { pushPage } = usePageStack()
+  const { resetPageStackToRoot } = usePageStack()
   const dispatch = useFindEmotionDispatch()
   const { strongestEmotionIds, strongestSinglePickId } = getActivePass(
     useFindEmotionState(),
@@ -57,7 +57,7 @@ export function SummaryPage() {
           label="Start over"
           onClick={() => {
             dispatch({ type: 'reset_session_history' })
-            pushPage('welcome')
+            resetPageStackToRoot()
           }}
         />
       </div>

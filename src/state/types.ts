@@ -34,7 +34,10 @@ export type FindEmotionState = {
   passes: Pass[]
   /** Index into `passes` for the pass being edited. */
   activePass: number
-  /** Logged as the user moves through route screens; see `NavigationHistoryBridge`. */
+  /**
+   * Mirrors the `sessionHistory` array in `window.history.state` (see
+   * `PageStackContext`); updated whenever the app stack and browser state change.
+   */
   history: HistoryEntry[]
   /** Current index into `history` (-1 when no entry is active). */
   historyIndex: number
@@ -55,6 +58,10 @@ export type FindEmotionAction =
   | { type: "clear_states" }
   | { type: "clear_emotions" }
   | { type: "clear_strong_emotions" }
-  | { type: "history_forward"; passIndex: number; screen: Screen }
-  | { type: "history_back" }
+  | { type: "set_session_trace"; history: HistoryEntry[] }
   | { type: "reset_session_history" }
+  | { type: "add_pass" }
+  /** Removes passes after the active index; pass at index 0 is always kept. */
+  | { type: "discard_later_passes" }
+  /** Set active pass by index; if out of range, uses 0. */
+  | { type: "update_active_pass"; index: number }

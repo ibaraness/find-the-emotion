@@ -1,9 +1,14 @@
-import type {
-  FindEmotionAction,
-  FindEmotionState,
-  HistoryEntry,
-  Pass,
-} from './types'
+import type { FindEmotionAction, FindEmotionState, Pass } from './types'
+
+function createNewPass(): Pass {
+  return {
+    id: crypto.randomUUID(),
+    selectedStateIds: [],
+    selectedEmotionIds: [],
+    strongestEmotionIds: [],
+    strongestSinglePickId: null,
+  }
+}
 
 function updateActivePass(
   state: FindEmotionState,
@@ -13,6 +18,26 @@ function updateActivePass(
   if (i < 0 || i >= state.passes.length) return state
   const nextPasses = state.passes.map((p, idx) => (idx === i ? update(p) : p))
   return { ...state, passes: nextPasses }
+}
+
+/** Align `activePass` with the `passIndex` stored on the entry at `history[historyIndex]`. */
+function syncActivePassFromCurrentHistoryEntry(
+  state: FindEmotionState,
+): FindEmotionState {
+  if (state.passes.length === 0) {
+    return { ...state, activePass: 0 }
+  }
+  if (state.historyIndex < 0 || state.historyIndex >= state.history.length) {
+    return state
+  }
+  const entry = state.history[state.historyIndex]
+  if (!entry) return state
+  let target = entry.passIndex
+  const max = state.passes.length - 1
+  if (target < 0) target = 0
+  if (target > max) target = max
+  if (target === state.activePass) return state
+  return { ...state, activePass: target }
 }
 
 export function findEmotionReducer(
@@ -122,27 +147,55 @@ export function findEmotionReducer(
         strongestSinglePickId: null,
       }))
 
-    case 'history_forward': {
-      const entry: HistoryEntry = {
-        passIndex: action.passIndex,
-        screen: action.screen,
-      }
-      const next = state.history.slice(0, state.historyIndex + 1)
-      next.push(entry)
-      return {
+    case 'set_session_trace': {
+      const h = action.history
+      const historyIndex = h.length > 0 ? h.length - 1 : -1
+      return syncActivePassFromCurrentHistoryEntry({
         ...state,
-        history: next,
-        historyIndex: next.length - 1,
-      }
-    }
-
-    case 'history_back': {
-      if (state.historyIndex < 0) return state
-      return { ...state, historyIndex: state.historyIndex - 1 }
+        history: h,
+        historyIndex,
+      })
     }
 
     case 'reset_session_history':
-      return { ...state, history: [], historyIndex: -1 }
+      return {
+        ...state,
+        history: [],
+        historyIndex: -1,
+        passes: [createNewPass()],
+        activePass: 0,
+      }
+
+    case 'add_pass': {
+      const newPass = createNewPass()
+      const nextPasses = [...state.passes, newPass]
+      return {
+        ...state,
+        passes: nextPasses,
+        activePass: nextPasses.length - 1,
+      }
+    }
+
+    case 'discard_later_passes': {
+      if (state.passes.length === 0) return { ...state, activePass: 0 }
+      const i =
+        state.activePass < 0
+          ? 0
+          : Math.min(state.activePass, state.passes.length - 1)
+      const nextPasses = state.passes.slice(0, i + 1)
+      return { ...state, passes: nextPasses, activePass: i }
+    }
+
+    case 'update_active_pass': {
+      if (state.passes.length === 0) {
+        return { ...state, activePass: 0 }
+      }
+      const next =
+        action.index >= 0 && action.index < state.passes.length
+          ? action.index
+          : 0
+      return { ...state, activePass: next }
+    }
 
     default:
       return state
