@@ -4,11 +4,13 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import { getActivePass, useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
 
 export function StrongestEmotionPage() {
   const { pushPage } = usePageStack()
-  const { strongestEmotionIds, strongestSinglePickId } = useFindEmotionState()
+  const { strongestEmotionIds, strongestSinglePickId } = getActivePass(
+    useFindEmotionState(),
+  )
   const dispatch = useFindEmotionDispatch()
 
   const effectivePick =
@@ -45,7 +47,7 @@ export function StrongestEmotionPage() {
       <div className="mt-8 pb-20">
         <PrimaryButton
           label="Continue"
-          onClick={() => pushPage('summary')}
+          onClick={() => pushPage('pause')}
           disabled={effectivePick == null}
         />
       </div>

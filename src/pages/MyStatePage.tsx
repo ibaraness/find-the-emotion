@@ -5,11 +5,11 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
 import { usePageStack } from '@/navigation/PageStackContext'
 import { states } from '@/config/states'
-import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import { getActivePass, useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
 
 export function MyStatePage() {
   const { pushPage } = usePageStack()
-  const { selectedStateIds } = useFindEmotionState();
+  const { selectedStateIds } = getActivePass(useFindEmotionState());
   const dispatch = useFindEmotionDispatch();
 
   return (

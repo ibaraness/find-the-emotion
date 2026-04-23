@@ -34,6 +34,7 @@ export function WelcomePage() {
         <PrimaryButton
           label="Start"
           onClick={() => {
+            dispatch({ type: 'reset_session_history' })
             dispatch({ type: 'clear_states' })
             dispatch({ type: 'clear_emotions' })
             dispatch({ type: 'clear_strong_emotions' })
