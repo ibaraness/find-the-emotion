@@ -4,20 +4,31 @@ import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { usePageStack } from '@/navigation/PageStackContext'
 import distortedHeartSmall from '@/assets/distorted-heart-small.webp'
-import { getActivePass, useFindEmotionState } from '@/state/context'
+import {
+  getActivePass,
+  useFindEmotionDispatch,
+  useFindEmotionState,
+} from '@/state/context'
 import { emotions } from '@/config/emotions'
 import { Check } from 'lucide-react'
 import { SecondaryButton } from '@/components/SecondaryButton'
 export function PausePage() {
   const { pushPage } = usePageStack()
-  const { strongestEmotionIds, strongestSinglePickId } = getActivePass(
-    useFindEmotionState(),
-  )
+  const dispatch = useFindEmotionDispatch()
+  const findState = useFindEmotionState()
+  const { passes } = findState
+  const { strongestEmotionIds, strongestSinglePickId } = getActivePass(findState)
   const primaryEmotionId =
     strongestSinglePickId ??
     (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)
   const strongestEmotionName =
     emotions.find((emotion) => emotion.id === primaryEmotionId)?.name ?? ''
+
+  const onMoreHere = () => {
+    const newPassIndex = passes.length
+    dispatch({ type: 'add_pass' })
+    pushPage('my-emotions', { passIndex: newPassIndex })
+  }
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[380px] md:pb-20">
@@ -54,11 +65,11 @@ export function PausePage() {
 
       <MobileBottomAction position="fixed">
         <div className="mb-4"><PrimaryButton label="Continue to summary" onClick={() => pushPage('summary')} /></div>
-        <div className="mb-4"><SecondaryButton label="I think there’s more here" onClick={() => pushPage('summary')} /></div>
+        <div className="mb-4"><SecondaryButton label="I think there’s more here" onClick={onMoreHere} /></div>
       </MobileBottomAction>
       <div className="mt-8 hidden pb-20 pt-8 md:block">
         <div className="mb-4"><PrimaryButton label="Continue to summary" onClick={() => pushPage('summary')} /></div>
-        <div className="mb-4"><SecondaryButton label="I think there’s more here" onClick={() => pushPage('summary')} /></div>
+        <div className="mb-4"><SecondaryButton label="I think there’s more here" onClick={onMoreHere} /></div>
       </div>
     </PageSection>
   )
