@@ -31,7 +31,7 @@ export function ProcessStep({
         </span>
       </div>
 
-      <div className="min-w-0 pl-2 pr-4 text-left font-heading text-[18px] leading-5 text-[#616C89]">
+      <div className="min-w-0 pl-2 pr-4 text-left font-heading text-[clamp(12px,4.1vw,18px)] leading-5 text-[#616C89]">
         {label}
       </div>
 
