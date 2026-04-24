@@ -14,7 +14,7 @@ export function MyStatePage() {
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
-      <Breadcrumb label="STEP 1: MY STATE" />
+      <Breadcrumb className='uppercase' label="My general feeling" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-7 text-text-heading">
       What are you feeling right now?
       </h1>

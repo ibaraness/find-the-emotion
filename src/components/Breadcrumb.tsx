@@ -2,7 +2,7 @@ const defaultMarginTopClassName = 'mt-4'
 const defaultMarginBottomClassName = 'mb-10'
 
 const rootTypographyClassName =
-  'text-center font-light tracking-wide text-[clamp(12px,3.26vw,15px)] text-text-primary'
+  'text-center font-light tracking-wide text-[clamp(10px,2.5vw,12px)] text-text-primary'
 
 export type BreadcrumbProps = {
   label: string

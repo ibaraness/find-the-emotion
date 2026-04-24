@@ -28,7 +28,7 @@ export function SummaryPage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <Breadcrumb label="STEP 6: SUMMARY" />
+      <Breadcrumb className='uppercase' label="What we found" />
       <h1 className="mb-[clamp(30px,12vw,80px)] text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       What feels strongest right now is
       </h1>

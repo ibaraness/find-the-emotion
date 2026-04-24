@@ -39,7 +39,7 @@ export function MyEmotionsPage() {
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
-      <Breadcrumb label="STEP 2: MY EMOTIONS" />
+      <Breadcrumb className='uppercase' label="What feels true right now" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
         {heading}
       </h1>

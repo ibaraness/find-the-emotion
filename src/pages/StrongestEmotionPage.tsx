@@ -19,7 +19,7 @@ export function StrongestEmotionPage() {
 
   return (
     <PageSection padding="narrow" textCenter>
-      <Breadcrumb label="STEP 4: STRONGEST EMOTION" />
+      <Breadcrumb className='uppercase' label="What stands out most" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-10 text-text-heading">
       Which one stands out most right now?
       </h1>

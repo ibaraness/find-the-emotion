@@ -32,7 +32,7 @@ export function PausePage() {
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[380px] md:pb-20">
-      <Breadcrumb label="STEP 5: PAUSE" marginBottomClassName='mb-4' />
+      <Breadcrumb className='uppercase' label="Pause for a moment..." marginBottomClassName='mb-4' />
       <div className="mx-auto h-[70px] w-[70px] mb-4">
         <img
           src={distortedHeartSmall}
