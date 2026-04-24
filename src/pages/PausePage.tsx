@@ -55,11 +55,11 @@ export function PausePage() {
           <div className="flex flex-col justify-center items-start w-[clamp(200px,77vw,400px)] md:w-fit gap-4">
 
               <div className="flex items-center gap-2 text-left">
-                <Check size={16} className="text-primary" />
+                <Check size={16} className="shrink-0 text-primary" />
                 If it feels complete, continue to the summary.
               </div>
               <div className="flex items-center gap-2 text-left">
-                <Check size={16} className="text-primary" />
+                <Check size={16} className="shrink-0 text-primary" />
                 If not, gently look back and notice whether there was another feeling that came before it
               </div>
           </div>
