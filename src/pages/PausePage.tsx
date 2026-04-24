@@ -16,7 +16,12 @@ export function PausePage() {
   const { pushPage } = usePageStack()
   const dispatch = useFindEmotionDispatch()
   const { displayedPass, state } = useMountedPass()
-  const { passes } = state
+  const { activePass, passes } = state
+  const hasFuturePasses =
+    passes.length > 0 && activePass < passes.length - 1
+  const secondaryCTALabel = hasFuturePasses
+    ? 'Continue where I left off'
+    : "I think there's more here"
   const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const primaryEmotionId =
     strongestSinglePickId ??
@@ -31,6 +36,18 @@ export function PausePage() {
     })
     pushPage('my-emotions', { passIndex: newPassIndex })
   }
+
+  const onContinueWhereILeftOff = () => {
+    if (passes.length === 0) return
+    // `update_active_pass` uses 0 for out-of-range index; we clamp to a real pass.
+    const next = Math.max(0, Math.min(activePass + 1, passes.length - 1))
+    flushSync(() => {
+      dispatch({ type: 'update_active_pass', index: next })
+    })
+    pushPage('my-emotions', { passIndex: next })
+  }
+
+  const onSecondary = hasFuturePasses ? onContinueWhereILeftOff : onMoreHere
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[380px] md:pb-20">
@@ -67,11 +84,11 @@ export function PausePage() {
 
       <MobileBottomAction position="fixed">
         <div className="mb-4"><PrimaryButton label="Continue to summary" onClick={() => pushPage('summary')} /></div>
-        <div className="mb-4"><SecondaryButton label="I think there’s more here" onClick={onMoreHere} /></div>
+        <div className="mb-4"><SecondaryButton label={secondaryCTALabel} onClick={onSecondary} /></div>
       </MobileBottomAction>
       <div className="mt-8 hidden pb-20 pt-8 md:block">
         <div className="mb-4"><PrimaryButton label="Continue to summary" onClick={() => pushPage('summary')} /></div>
-        <div className="mb-4"><SecondaryButton label="I think there’s more here" onClick={onMoreHere} /></div>
+        <div className="mb-4"><SecondaryButton label={secondaryCTALabel} onClick={onSecondary} /></div>
       </div>
     </PageSection>
   )
