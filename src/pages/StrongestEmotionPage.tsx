@@ -4,13 +4,13 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { getActivePass, useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import { useFindEmotionDispatch } from '@/state/context'
+import { useMountedPass } from '@/state/useMountedPass'
 
 export function StrongestEmotionPage() {
   const { pushPage } = usePageStack()
-  const { strongestEmotionIds, strongestSinglePickId } = getActivePass(
-    useFindEmotionState(),
-  )
+  const { displayedPass } = useMountedPass()
+  const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const dispatch = useFindEmotionDispatch()
 
   const effectivePick =

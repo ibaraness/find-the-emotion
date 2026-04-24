@@ -5,19 +5,19 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { usePageStack } from '@/navigation/PageStackContext'
 import distortedHeartSmall from '@/assets/distorted-heart-small.webp'
 import {
-  getActivePass,
   useFindEmotionDispatch,
-  useFindEmotionState,
 } from '@/state/context'
+import { useMountedPass } from '@/state/useMountedPass'
 import { emotions } from '@/config/emotions'
 import { Check } from 'lucide-react'
 import { SecondaryButton } from '@/components/SecondaryButton'
+import { flushSync } from 'react-dom'
 export function PausePage() {
   const { pushPage } = usePageStack()
   const dispatch = useFindEmotionDispatch()
-  const findState = useFindEmotionState()
-  const { passes } = findState
-  const { strongestEmotionIds, strongestSinglePickId } = getActivePass(findState)
+  const { displayedPass, state } = useMountedPass()
+  const { passes } = state
+  const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const primaryEmotionId =
     strongestSinglePickId ??
     (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)
@@ -26,7 +26,9 @@ export function PausePage() {
 
   const onMoreHere = () => {
     const newPassIndex = passes.length
-    dispatch({ type: 'add_pass' })
+    flushSync(() => {
+      dispatch({ type: 'add_pass' })
+    })
     pushPage('my-emotions', { passIndex: newPassIndex })
   }
 

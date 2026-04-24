@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import type { FindEmotionAction, HistoryEntry } from '@/state/types'
 import { isObjectRecord } from '@/lib/typeGuards'
+import { flushSync } from 'react-dom'
 import { INITIAL_PAGE_ID, type PageId } from './pageRegistry'
 import type { Direction } from './types'
 import {
@@ -39,11 +40,17 @@ export function useSyncStackFromPopstate({
         isObjectRecord(e.state) ? e.state[HISTORY_STACK_KEY] : undefined
       const nextStack = sanitizeStack(raw)
       const prevStackLength = stackRef.current.length
+      const trace = buildSessionTraceFromState(e.state, nextStack)
+
+      // Update pass/session state first so the entering page mounts with the
+      // correct activePass already selected.
+      flushSync(() => {
+        dispatch({ type: 'set_session_trace', history: trace })
+      })
+
       setDirection(nextStack.length < prevStackLength ? -1 : 1)
       setStack(nextStack)
       stackRef.current = nextStack
-      const trace = buildSessionTraceFromState(e.state, nextStack)
-      dispatch({ type: 'set_session_trace', history: trace })
 
       if (pendingPruneAfterGoBackRef.current) {
         if (pruneFallbackTimerRef.current) {
@@ -60,10 +67,12 @@ export function useSyncStackFromPopstate({
           '',
           window.location.href,
         )
+        flushSync(() => {
+          dispatch({ type: 'set_session_trace', history: [] })
+        })
         stackRef.current = base
         setStack(base)
         setDirection(1)
-        dispatch({ type: 'set_session_trace', history: [] })
       }
     }
 

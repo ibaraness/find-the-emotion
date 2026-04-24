@@ -6,15 +6,15 @@ import { RankedEmotionSlot } from '@/components/RankedEmotionSlot'
 import { AddEmotionRow } from '@/components/AddEmotionRow'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { getActivePass, useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import { useFindEmotionDispatch } from '@/state/context'
+import { useMountedPass } from '@/state/useMountedPass'
 import { emotions } from '@/config/emotions'
 
 /** Skeleton for refined emotions step — no chip list, ready for custom ranked UI. */
 export function RefinedEmotionsPage() {
   const { pushPage } = usePageStack()
-  const { selectedEmotionIds, strongestEmotionIds } = getActivePass(
-    useFindEmotionState(),
-  )
+  const { displayedPass } = useMountedPass()
+  const { selectedEmotionIds, strongestEmotionIds } = displayedPass
   const dispatch = useFindEmotionDispatch()
 
   const getRank = (index: number): "1" | "2" | "3" => {

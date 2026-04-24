@@ -4,19 +4,15 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { emotions } from '@/config/emotions'
 import { Check } from 'lucide-react'
 import { usePageStack } from '@/navigation/PageStackContext'
-import {
-  getActivePass,
-  useFindEmotionDispatch,
-  useFindEmotionState,
-} from '@/state/context'
+import { useFindEmotionDispatch } from '@/state/context'
+import { useMountedPass } from '@/state/useMountedPass'
 
 /** Summary step scaffold — replace content as you build the final screen. */
 export function SummaryPage() {
   const { resetPageStackToRoot } = usePageStack()
   const dispatch = useFindEmotionDispatch()
-  const { strongestEmotionIds, strongestSinglePickId } = getActivePass(
-    useFindEmotionState(),
-  )
+  const { displayedPass } = useMountedPass()
+  const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const primaryEmotionId =
     strongestSinglePickId ??
     (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)

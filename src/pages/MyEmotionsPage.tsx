@@ -5,7 +5,8 @@ import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { getActivePass, useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import { useFindEmotionDispatch } from '@/state/context'
+import { useMountedPass } from '@/state/useMountedPass'
 import type { Pass } from '@/state/types'
 
 function primaryStrongestEmotionName(pass: Pass): string {
@@ -22,13 +23,13 @@ function primaryStrongestEmotionName(pass: Pass): string {
 
 export function MyEmotionsPage() {
   const { pushPage } = usePageStack()
-  const state = useFindEmotionState()
-  const { selectedEmotionIds } = getActivePass(state)
-  const { activePass, passes } = state
+  const { displayedPass, displayedPassIndex, state } = useMountedPass()
+  const { passes } = state
   const dispatch = useFindEmotionDispatch()
 
-  const isFollowUpPass = activePass > 0
-  const previousPass = isFollowUpPass ? passes[activePass - 1] : undefined
+  const { selectedEmotionIds } = displayedPass
+  const isFollowUpPass = displayedPassIndex > 0
+  const previousPass = isFollowUpPass ? passes[displayedPassIndex - 1] : undefined
   const previousPassName = previousPass
     ? primaryStrongestEmotionName(previousPass)
     : ''
