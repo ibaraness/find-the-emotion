@@ -54,6 +54,32 @@ export function SummaryPage() {
           </div>
         </div>
       ) : null}
+      <div className="mx-auto mt-12 w-full max-w-[320px] text-left">
+        <h3 className="mb-6 text-[32px] font-normal text-center leading-none tracking-tighter text-text-heading">
+          What’s next?
+        </h3>
+        <div className="flex flex-col gap-5">
+          <p className="text-[16px] text-text-heading">
+            Stay with this for a moment
+          </p>
+          <div className="opacity-70">
+            <p className="text-[16px] text-text-heading underline decoration-current">
+              Understand what’s behind this feeling
+            </p>
+            <p className="mt-1 text-[16px] font-light italic text-text-heading">
+              Available soon
+            </p>
+          </div>
+          <div className="opacity-70">
+            <p className="text-[16px] text-text-heading underline decoration-current">
+              Shift how this feels right now
+            </p>
+            <p className="mt-1 text-[16px] font-light italic text-text-heading">
+              Available soon
+            </p>
+          </div>
+        </div>
+      </div>
       <div className="mt-12 pb-20">
         <PrimaryButton
           label="Start over"
