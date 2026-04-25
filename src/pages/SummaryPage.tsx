@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
+import { EmotionUnfoldedChain } from '@/components/EmotionUnfoldedChain'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { emotions } from '@/config/emotions'
@@ -11,7 +12,8 @@ import { useMountedPass } from '@/state/useMountedPass'
 export function SummaryPage() {
   const { resetPageStackToRoot } = usePageStack()
   const dispatch = useFindEmotionDispatch()
-  const { displayedPass } = useMountedPass()
+  const { displayedPass, displayedPassIndex, state } = useMountedPass()
+  const { passes } = state
   const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const primaryEmotionId =
     strongestSinglePickId ??
@@ -31,6 +33,10 @@ export function SummaryPage() {
       <h2 className='text-[clamp(40px,12vw,64px)] font-normal leading-none tracking-tighter text-text-heading mb-[clamp(30px,12vw,80px)]'>
         {strongestEmotionName}
       </h2>
+      <EmotionUnfoldedChain
+        passes={passes}
+        currentPassIndex={displayedPassIndex}
+      />
       {alsoEmotionIds.length > 0 ? (
         <div className="mb-4 text-base text-text-primary">
           You also feel:
