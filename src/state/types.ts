@@ -58,6 +58,7 @@ export type FindEmotionAction =
   | { type: "clear_states" }
   | { type: "clear_emotions" }
   | { type: "clear_strong_emotions" }
+  | { type: "clear_strongest_single" }
   | { type: "set_session_trace"; history: HistoryEntry[] }
   | { type: "reset_session_history" }
   | { type: "add_pass" }

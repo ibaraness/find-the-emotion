@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Breadcrumb } from '@/components/Breadcrumb'
+import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
 import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
@@ -6,16 +8,30 @@ import { RankedEmotionSlot } from '@/components/RankedEmotionSlot'
 import { AddEmotionRow } from '@/components/AddEmotionRow'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { useFindEmotionDispatch } from '@/state/context'
+import {
+  getActivePass,
+  useFindEmotionDispatch,
+  useFindEmotionState,
+} from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
 import { emotions } from '@/config/emotions'
 
 /** Skeleton for refined emotions step — no chip list, ready for custom ranked UI. */
 export function RefinedEmotionsPage() {
   const { pushPage } = usePageStack()
+  const state = useFindEmotionState()
+  const { activePass, passes } = state
+  const passForEdit = getActivePass(state)
   const { displayedPass } = useMountedPass()
   const { selectedEmotionIds, strongestEmotionIds } = displayedPass
   const dispatch = useFindEmotionDispatch()
+  const [pendingAction, setPendingAction] = useState<{
+    type: 'add' | 'remove'
+    id: string
+  } | null>(null)
+  const hasFuturePasses = passes.length > 0 && activePass < passes.length - 1
+  const hasStrongestPick = passForEdit.strongestSinglePickId != null
+  const needsRefinedChangeWarning = hasFuturePasses || hasStrongestPick
 
   const getRank = (index: number): "1" | "2" | "3" => {
     if (index === 0) return "1";
@@ -30,8 +46,46 @@ export function RefinedEmotionsPage() {
     (id) => !strongestEmotionIds.includes(id)
   );
 
+  const requestAddStrongEmotion = (id: string) => {
+    if (needsRefinedChangeWarning) {
+      setPendingAction({ type: 'add', id })
+      return
+    }
+    dispatch({ type: 'add_strong_emotion', id })
+  }
+
+  const requestRemoveStrongEmotion = (id: string) => {
+    if (needsRefinedChangeWarning) {
+      setPendingAction({ type: 'remove', id })
+      return
+    }
+    dispatch({ type: 'remove_strong_emotion', id })
+  }
+
+  const onConfirmRefinedChange = () => {
+    if (!pendingAction) return
+    const action = pendingAction
+    setPendingAction(null)
+    if (hasFuturePasses) {
+      dispatch({ type: 'discard_later_passes' })
+    }
+    if (hasStrongestPick) {
+      dispatch({ type: 'clear_strongest_single' })
+    }
+    if (action.type === 'add') {
+      dispatch({ type: 'add_strong_emotion', id: action.id })
+      return
+    }
+    dispatch({ type: 'remove_strong_emotion', id: action.id })
+  }
+
   return (
     <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
+      <FlowResetConfirmDialog
+        open={pendingAction != null}
+        onCancel={() => setPendingAction(null)}
+        onConfirm={onConfirmRefinedChange}
+      />
       <Breadcrumb className='uppercase' label="What I’m really feeling" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
       Narrow it down
@@ -56,7 +110,7 @@ export function RefinedEmotionsPage() {
                 showArrowButtons={false}
                 onSelectEmotion={() => {}}
                 onRemove={() => {
-                  if (emotionId) dispatch({ type: 'remove_strong_emotion', id: emotionId })
+                  if (emotionId) requestRemoveStrongEmotion(emotionId)
                 }}
                 moveUp={() => {
                   if (emotionId) dispatch({ type: 'move_up_emotion', id: emotionId })
@@ -83,7 +137,7 @@ export function RefinedEmotionsPage() {
             >
               <AddEmotionRow
                 label={emotions.find((emotion) => emotion.id === emotionId)?.name ?? ''}
-                onAddition={() => dispatch({ type: 'add_strong_emotion', id: emotionId })}
+                onAddition={() => requestAddStrongEmotion(emotionId)}
               />
             </motion.div>
           ))}

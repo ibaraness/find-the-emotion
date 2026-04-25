@@ -147,6 +147,12 @@ export function findEmotionReducer(
         strongestSinglePickId: null,
       }))
 
+    case 'clear_strongest_single':
+      return updateActivePass(state, (p) => ({
+        ...p,
+        strongestSinglePickId: null,
+      }))
+
     case 'set_session_trace': {
       const h = action.history
       const historyIndex = h.length > 0 ? h.length - 1 : -1

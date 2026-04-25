@@ -1,24 +1,50 @@
+import { useState } from 'react'
 import { Breadcrumb } from '@/components/Breadcrumb'
+import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { useFindEmotionDispatch } from '@/state/context'
+import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
 
 export function StrongestEmotionPage() {
   const { pushPage } = usePageStack()
+  const { activePass, passes } = useFindEmotionState()
   const { displayedPass } = useMountedPass()
   const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const dispatch = useFindEmotionDispatch()
+  const [pendingEmotionId, setPendingEmotionId] = useState<string | null>(null)
+  const hasFuturePasses = passes.length > 0 && activePass < passes.length - 1
 
   const effectivePick =
     strongestSinglePickId ??
     (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)
 
+  const requestSetStrongest = (id: string) => {
+    if (hasFuturePasses) {
+      setPendingEmotionId(id)
+      return
+    }
+    dispatch({ type: 'set_strongest_single', id })
+  }
+
+  const onConfirmStrongestChange = () => {
+    if (!pendingEmotionId) return
+    const id = pendingEmotionId
+    setPendingEmotionId(null)
+    dispatch({ type: 'discard_later_passes' })
+    dispatch({ type: 'set_strongest_single', id })
+  }
+
   return (
     <PageSection padding="narrow" textCenter>
+      <FlowResetConfirmDialog
+        open={pendingEmotionId != null}
+        onCancel={() => setPendingEmotionId(null)}
+        onConfirm={onConfirmStrongestChange}
+      />
       <Breadcrumb className='uppercase' label="What stands out most" />
       <h1 className="text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-center mb-10 text-text-heading">
       Which one stands out most right now?
@@ -37,9 +63,7 @@ export function StrongestEmotionPage() {
             <SelectableChip
               label={emotion.name}
               selected={effectivePick === emotionId}
-              onChange={() =>
-                dispatch({ type: 'set_strongest_single', id: emotionId })
-              }
+              onChange={() => requestSetStrongest(emotionId)}
             />
           </div>
         )
