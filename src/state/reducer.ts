@@ -163,6 +163,40 @@ export function findEmotionReducer(
       })
     }
 
+    case 'history_back': {
+      if (state.history.length === 0 || state.historyIndex <= 0) {
+        return state
+      }
+      return syncActivePassFromCurrentHistoryEntry({
+        ...state,
+        historyIndex: state.historyIndex - 1,
+      })
+    }
+
+    case 'history_forward': {
+      const entry = {
+        passIndex: action.passIndex,
+        screen: action.screen,
+      }
+      const nextSlot = state.historyIndex + 1
+      if (
+        nextSlot < state.history.length &&
+        state.history[nextSlot]?.passIndex === entry.passIndex &&
+        state.history[nextSlot]?.screen === entry.screen
+      ) {
+        return syncActivePassFromCurrentHistoryEntry({
+          ...state,
+          historyIndex: nextSlot,
+        })
+      }
+      const h = [...state.history.slice(0, nextSlot), entry]
+      return syncActivePassFromCurrentHistoryEntry({
+        ...state,
+        history: h,
+        historyIndex: h.length - 1,
+      })
+    }
+
     case 'reset_session_history':
       return {
         ...state,

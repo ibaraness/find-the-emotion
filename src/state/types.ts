@@ -60,6 +60,9 @@ export type FindEmotionAction =
   | { type: "clear_strong_emotions" }
   | { type: "clear_strongest_single" }
   | { type: "set_session_trace"; history: HistoryEntry[] }
+  /** Used by `NavigationHistoryBridge` to mirror stack depth in session `history`. */
+  | { type: "history_back" }
+  | { type: "history_forward"; passIndex: number; screen: Screen }
   | { type: "reset_session_history" }
   | { type: "add_pass" }
   /** Removes passes after the active index; pass at index 0 is always kept. */
