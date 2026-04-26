@@ -23,5 +23,10 @@ export function useMountedPass() {
       ? mountedPassIndexRef.current
       : 0
 
-  return { displayedPass, displayedPassIndex, state }
+  return {
+    displayedPass,
+    displayedPassIndex,
+    mountedPassId: mountedPassIdRef.current,
+    state,
+  }
 }

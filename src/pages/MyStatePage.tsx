@@ -6,11 +6,13 @@ import { SelectableChip } from '@/components/SelectableChip'
 import { usePageStack } from '@/navigation/PageStackContext'
 import { states } from '@/config/states'
 import { useFindEmotionDispatch } from '@/state/context'
+import { useSessionPassGuard } from '@/state/useSessionPassGuard'
 import { useMountedPass } from '@/state/useMountedPass'
 
 export function MyStatePage() {
   const { pushPage } = usePageStack()
-  const { displayedPass } = useMountedPass()
+  const { displayedPass, mountedPassId } = useMountedPass()
+  const { withPassContext } = useSessionPassGuard(mountedPassId)
   const { selectedStateIds } = displayedPass
   const dispatch = useFindEmotionDispatch()
 
@@ -28,7 +30,9 @@ export function MyStatePage() {
           <SelectableChip
             label={state.name}
             selected={selectedStateIds.includes(state.id)}
-            onChange={() => dispatch({ type: 'toggle_state', id: state.id })}
+            onChange={() =>
+              withPassContext(() => dispatch({ type: 'toggle_state', id: state.id }))
+            }
           />
         </div>
       ))}

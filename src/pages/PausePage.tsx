@@ -8,6 +8,7 @@ import {
   useFindEmotionDispatch,
 } from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
+import { useSessionPassGuard } from '@/state/useSessionPassGuard'
 import { emotions } from '@/config/emotions'
 import { Check } from 'lucide-react'
 import { SecondaryButton } from '@/components/SecondaryButton'
@@ -15,7 +16,8 @@ import { flushSync } from 'react-dom'
 export function PausePage() {
   const { pushPage } = usePageStack()
   const dispatch = useFindEmotionDispatch()
-  const { displayedPass, state } = useMountedPass()
+  const { displayedPass, state, mountedPassId } = useMountedPass()
+  const { withPassContext } = useSessionPassGuard(mountedPassId)
   const { activePass, passes } = state
   const hasFuturePasses =
     passes.length > 0 && activePass < passes.length - 1
@@ -31,20 +33,24 @@ export function PausePage() {
 
   const onMoreHere = () => {
     const newPassIndex = passes.length
-    flushSync(() => {
-      dispatch({ type: 'add_pass' })
+    withPassContext(() => {
+      flushSync(() => {
+        dispatch({ type: 'add_pass' })
+      })
+      pushPage('my-emotions', { passIndex: newPassIndex })
     })
-    pushPage('my-emotions', { passIndex: newPassIndex })
   }
 
   const onContinueWhereILeftOff = () => {
     if (passes.length === 0) return
     // Clamp so we never dispatch an out-of-range index (reducer ignores invalid indices).
     const next = Math.max(0, Math.min(activePass + 1, passes.length - 1))
-    flushSync(() => {
-      dispatch({ type: 'update_active_pass', index: next })
+    withPassContext(() => {
+      flushSync(() => {
+        dispatch({ type: 'update_active_pass', index: next })
+      })
+      pushPage('my-emotions', { passIndex: next })
     })
-    pushPage('my-emotions', { passIndex: next })
   }
 
   const onSecondary = hasFuturePasses ? onContinueWhereILeftOff : onMoreHere

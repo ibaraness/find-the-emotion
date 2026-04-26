@@ -13,6 +13,7 @@ import {
   useFindEmotionState,
 } from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
+import { useSessionPassGuard } from '@/state/useSessionPassGuard'
 import type { Pass } from '@/state/types'
 
 function primaryStrongestEmotionName(pass: Pass): string {
@@ -32,7 +33,8 @@ export function MyEmotionsPage() {
   const state = useFindEmotionState()
   const { activePass, passes } = state
   const passForEdit = getActivePass(state)
-  const { displayedPass, displayedPassIndex } = useMountedPass()
+  const { displayedPass, displayedPassIndex, mountedPassId } = useMountedPass()
+  const { withPassContext } = useSessionPassGuard(mountedPassId)
   const dispatch = useFindEmotionDispatch()
   const [pendingEmotionId, setPendingEmotionId] = useState<string | null>(null)
   const hasFuturePasses = passes.length > 0 && activePass < passes.length - 1
@@ -58,20 +60,22 @@ export function MyEmotionsPage() {
       setPendingEmotionId(id)
       return
     }
-    dispatch({ type: 'toggle_emotion', id })
+    withPassContext(() => dispatch({ type: 'toggle_emotion', id }))
   }
 
   const onConfirmEmotionChange = () => {
     if (!pendingEmotionId) return
     const id = pendingEmotionId
     setPendingEmotionId(null)
-    if (hasFuturePasses) {
-      dispatch({ type: 'discard_later_passes' })
-    }
-    if (hasRefineOrStrongestWork) {
-      dispatch({ type: 'clear_strong_emotions' })
-    }
-    dispatch({ type: 'toggle_emotion', id })
+    withPassContext(() => {
+      if (hasFuturePasses) {
+        dispatch({ type: 'discard_later_passes' })
+      }
+      if (hasRefineOrStrongestWork) {
+        dispatch({ type: 'clear_strong_emotions' })
+      }
+      dispatch({ type: 'toggle_emotion', id })
+    })
   }
 
   return (

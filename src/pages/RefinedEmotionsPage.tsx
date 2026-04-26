@@ -14,6 +14,7 @@ import {
   useFindEmotionState,
 } from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
+import { useSessionPassGuard } from '@/state/useSessionPassGuard'
 import { emotions } from '@/config/emotions'
 
 /** Skeleton for refined emotions step — no chip list, ready for custom ranked UI. */
@@ -22,7 +23,8 @@ export function RefinedEmotionsPage() {
   const state = useFindEmotionState()
   const { activePass, passes } = state
   const passForEdit = getActivePass(state)
-  const { displayedPass } = useMountedPass()
+  const { displayedPass, mountedPassId } = useMountedPass()
+  const { withPassContext } = useSessionPassGuard(mountedPassId)
   const { selectedEmotionIds, strongestEmotionIds } = displayedPass
   const dispatch = useFindEmotionDispatch()
   const [pendingAction, setPendingAction] = useState<{
@@ -51,7 +53,7 @@ export function RefinedEmotionsPage() {
       setPendingAction({ type: 'add', id })
       return
     }
-    dispatch({ type: 'add_strong_emotion', id })
+    withPassContext(() => dispatch({ type: 'add_strong_emotion', id }))
   }
 
   const requestRemoveStrongEmotion = (id: string) => {
@@ -59,24 +61,26 @@ export function RefinedEmotionsPage() {
       setPendingAction({ type: 'remove', id })
       return
     }
-    dispatch({ type: 'remove_strong_emotion', id })
+    withPassContext(() => dispatch({ type: 'remove_strong_emotion', id }))
   }
 
   const onConfirmRefinedChange = () => {
     if (!pendingAction) return
     const action = pendingAction
     setPendingAction(null)
-    if (hasFuturePasses) {
-      dispatch({ type: 'discard_later_passes' })
-    }
-    if (hasStrongestPick) {
-      dispatch({ type: 'clear_strongest_single' })
-    }
-    if (action.type === 'add') {
-      dispatch({ type: 'add_strong_emotion', id: action.id })
-      return
-    }
-    dispatch({ type: 'remove_strong_emotion', id: action.id })
+    withPassContext(() => {
+      if (hasFuturePasses) {
+        dispatch({ type: 'discard_later_passes' })
+      }
+      if (hasStrongestPick) {
+        dispatch({ type: 'clear_strongest_single' })
+      }
+      if (action.type === 'add') {
+        dispatch({ type: 'add_strong_emotion', id: action.id })
+        return
+      }
+      dispatch({ type: 'remove_strong_emotion', id: action.id })
+    })
   }
 
   return (
@@ -113,10 +117,18 @@ export function RefinedEmotionsPage() {
                   if (emotionId) requestRemoveStrongEmotion(emotionId)
                 }}
                 moveUp={() => {
-                  if (emotionId) dispatch({ type: 'move_up_emotion', id: emotionId })
+                  if (emotionId) {
+                    withPassContext(() =>
+                      dispatch({ type: 'move_up_emotion', id: emotionId }),
+                    )
+                  }
                 }}
                 moveDown={() => {
-                  if (emotionId) dispatch({ type: 'move_down_emotion', id: emotionId })
+                  if (emotionId) {
+                    withPassContext(() =>
+                      dispatch({ type: 'move_down_emotion', id: emotionId }),
+                    )
+                  }
                 }}
               />
             </motion.div>

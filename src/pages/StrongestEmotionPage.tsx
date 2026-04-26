@@ -8,11 +8,13 @@ import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
 import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
+import { useSessionPassGuard } from '@/state/useSessionPassGuard'
 
 export function StrongestEmotionPage() {
   const { pushPage } = usePageStack()
   const { activePass, passes } = useFindEmotionState()
-  const { displayedPass } = useMountedPass()
+  const { displayedPass, mountedPassId } = useMountedPass()
+  const { withPassContext } = useSessionPassGuard(mountedPassId)
   const { strongestEmotionIds, strongestSinglePickId } = displayedPass
   const dispatch = useFindEmotionDispatch()
   const [pendingEmotionId, setPendingEmotionId] = useState<string | null>(null)
@@ -27,15 +29,17 @@ export function StrongestEmotionPage() {
       setPendingEmotionId(id)
       return
     }
-    dispatch({ type: 'set_strongest_single', id })
+    withPassContext(() => dispatch({ type: 'set_strongest_single', id }))
   }
 
   const onConfirmStrongestChange = () => {
     if (!pendingEmotionId) return
     const id = pendingEmotionId
     setPendingEmotionId(null)
-    dispatch({ type: 'discard_later_passes' })
-    dispatch({ type: 'set_strongest_single', id })
+    withPassContext(() => {
+      dispatch({ type: 'discard_later_passes' })
+      dispatch({ type: 'set_strongest_single', id })
+    })
   }
 
   return (
