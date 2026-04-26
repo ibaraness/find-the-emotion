@@ -39,7 +39,7 @@ export function PausePage() {
 
   const onContinueWhereILeftOff = () => {
     if (passes.length === 0) return
-    // `update_active_pass` uses 0 for out-of-range index; we clamp to a real pass.
+    // Clamp so we never dispatch an out-of-range index (reducer ignores invalid indices).
     const next = Math.max(0, Math.min(activePass + 1, passes.length - 1))
     flushSync(() => {
       dispatch({ type: 'update_active_pass', index: next })

@@ -163,40 +163,6 @@ export function findEmotionReducer(
       })
     }
 
-    case 'history_back': {
-      if (state.history.length === 0 || state.historyIndex <= 0) {
-        return state
-      }
-      return syncActivePassFromCurrentHistoryEntry({
-        ...state,
-        historyIndex: state.historyIndex - 1,
-      })
-    }
-
-    case 'history_forward': {
-      const entry = {
-        passIndex: action.passIndex,
-        screen: action.screen,
-      }
-      const nextSlot = state.historyIndex + 1
-      if (
-        nextSlot < state.history.length &&
-        state.history[nextSlot]?.passIndex === entry.passIndex &&
-        state.history[nextSlot]?.screen === entry.screen
-      ) {
-        return syncActivePassFromCurrentHistoryEntry({
-          ...state,
-          historyIndex: nextSlot,
-        })
-      }
-      const h = [...state.history.slice(0, nextSlot), entry]
-      return syncActivePassFromCurrentHistoryEntry({
-        ...state,
-        history: h,
-        historyIndex: h.length - 1,
-      })
-    }
-
     case 'reset_session_history':
       return {
         ...state,
@@ -228,13 +194,24 @@ export function findEmotionReducer(
 
     case 'update_active_pass': {
       if (state.passes.length === 0) {
-        return { ...state, activePass: 0 }
+        if (import.meta.env.DEV) {
+          console.warn('[findEmotion] update_active_pass: passes is empty', {
+            requestedIndex: action.index,
+          })
+        }
+        return state
       }
-      const next =
-        action.index >= 0 && action.index < state.passes.length
-          ? action.index
-          : 0
-      return { ...state, activePass: next }
+      if (action.index < 0 || action.index >= state.passes.length) {
+        if (import.meta.env.DEV) {
+          console.warn('[findEmotion] update_active_pass: index out of range (ignored)', {
+            requestedIndex: action.index,
+            activePass: state.activePass,
+            passCount: state.passes.length,
+          })
+        }
+        return state
+      }
+      return { ...state, activePass: action.index }
     }
 
     default:
