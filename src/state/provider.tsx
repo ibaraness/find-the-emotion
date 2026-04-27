@@ -9,8 +9,8 @@ const defaultPass: Pass = {
   id: "1",
   selectedStateIds: [],
   selectedEmotionIds: [],
-  strongestEmotionIds: [],
-  strongestSinglePickId: null,
+  strongEmotionIds: [],
+  dominantEmotionId: null,
 }
 
 const initialState: FindEmotionState = {

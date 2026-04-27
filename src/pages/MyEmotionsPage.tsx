@@ -22,11 +22,11 @@ import type { Pass } from '@/state/types'
 
 function primaryStrongestEmotionName(pass: Pass): string {
   const id =
-    pass.strongestSinglePickId ??
-    (pass.strongestEmotionIds.length === 1
-      ? pass.strongestEmotionIds[0]
+    pass.dominantEmotionId ??
+    (pass.strongEmotionIds.length === 1
+      ? pass.strongEmotionIds[0]
       : null) ??
-    pass.strongestEmotionIds[0] ??
+    pass.strongEmotionIds[0] ??
     null
   if (!id) return ''
   return emotions.find((e) => e.id === id)?.name ?? ''

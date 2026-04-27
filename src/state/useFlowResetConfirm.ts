@@ -66,7 +66,7 @@ export function useFlowResetConfirm({
       dispatch({ type: 'clear_strong_emotions' })
     }
     if (clearStrongestSingle) {
-      dispatch({ type: 'clear_strongest_single' })
+      dispatch({ type: 'clear_dominant_emotion' })
     }
     executeAction()
   }, [dispatch, resetOptionsOnConfirm])

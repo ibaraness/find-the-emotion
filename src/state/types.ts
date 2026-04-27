@@ -23,9 +23,10 @@ export type Pass = {
   id: string
   selectedStateIds: string[]
   selectedEmotionIds: string[]
-  strongestEmotionIds: string[]
-  /** The strongest pick among refined `strongestEmotionIds` (StrongestEmotionPage). */
-  strongestSinglePickId: string | null
+  /** Up to 3 strong emotion candidates selected in the refine step. */
+  strongEmotionIds: string[]
+  /** Final dominant emotion selected from `strongEmotionIds`. */
+  dominantEmotionId: string | null
 }
 
 export type FindEmotionState = {
@@ -48,7 +49,7 @@ export type FindEmotionState = {
 export type FindEmotionAction =
   | { type: "toggle_state"; id: string }
   | { type: "toggle_emotion"; id: string }
-  | { type: "set_strongest_single"; id: string }
+  | { type: "set_dominant_emotion"; id: string }
   | { type: "add_strong_emotion"; id: string }
   | { type: "move_up_emotion"; id: string }
   | { type: "move_down_emotion"; id: string }
@@ -58,7 +59,7 @@ export type FindEmotionAction =
   | { type: "clear_states" }
   | { type: "clear_emotions" }
   | { type: "clear_strong_emotions" }
-  | { type: "clear_strongest_single" }
+  | { type: "clear_dominant_emotion" }
   | { type: "set_session_trace"; history: HistoryEntry[] }
   | { type: "reset_session_history" }
   | { type: "add_pass" }

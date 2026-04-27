@@ -24,12 +24,12 @@ export function PausePage() {
   const secondaryCTALabel = hasFuturePasses
     ? 'Continue where I left off'
     : "I think there's more here"
-  const { strongestEmotionIds, strongestSinglePickId } = displayedPass
-  const primaryEmotionId =
-    strongestSinglePickId ??
-    (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)
+  const { strongEmotionIds, dominantEmotionId } = displayedPass
+  const dominantEmotionIdForDisplay =
+    dominantEmotionId ??
+    (strongEmotionIds.length === 1 ? strongEmotionIds[0] : null)
   const strongestEmotionName =
-    emotions.find((emotion) => emotion.id === primaryEmotionId)?.name ?? ''
+    emotions.find((emotion) => emotion.id === dominantEmotionIdForDisplay)?.name ?? ''
 
   const onMoreHere = () => {
     const newPassIndex = passes.length

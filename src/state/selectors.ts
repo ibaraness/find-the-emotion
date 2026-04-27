@@ -7,10 +7,10 @@ export function selectHasFuturePasses(state: FindEmotionState): boolean {
 
 export function selectHasAnyStrongEmotions(state: FindEmotionState): boolean {
   const passForEdit = getActivePass(state)
-  return passForEdit.strongestEmotionIds.length > 0
+  return passForEdit.strongEmotionIds.length > 0
 }
 
 export function selectHasStrongestSinglePick(state: FindEmotionState): boolean {
   const passForEdit = getActivePass(state)
-  return passForEdit.strongestSinglePickId != null
+  return passForEdit.dominantEmotionId != null
 }

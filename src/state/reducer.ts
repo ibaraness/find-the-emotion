@@ -5,8 +5,8 @@ function createNewPass(): Pass {
     id: crypto.randomUUID(),
     selectedStateIds: [],
     selectedEmotionIds: [],
-    strongestEmotionIds: [],
-    strongestSinglePickId: null,
+    strongEmotionIds: [],
+    dominantEmotionId: null,
   }
 }
 
@@ -62,61 +62,61 @@ export function findEmotionReducer(
       })
     }
 
-    case 'set_strongest_single': {
+    case 'set_dominant_emotion': {
       return updateActivePass(state, (p) => {
-        if (!p.strongestEmotionIds.includes(action.id)) return p
-        return { ...p, strongestSinglePickId: action.id }
+        if (!p.strongEmotionIds.includes(action.id)) return p
+        return { ...p, dominantEmotionId: action.id }
       })
     }
 
     case 'add_strong_emotion': {
       return updateActivePass(state, (p) => {
-        const exists = p.strongestEmotionIds.includes(action.id)
-        const strongestEmotionIds = exists
-          ? p.strongestEmotionIds
-          : p.strongestEmotionIds.length >= 3
-            ? p.strongestEmotionIds
-            : [...p.strongestEmotionIds, action.id]
-        return { ...p, strongestEmotionIds }
+        const exists = p.strongEmotionIds.includes(action.id)
+        const strongEmotionIds = exists
+          ? p.strongEmotionIds
+          : p.strongEmotionIds.length >= 3
+            ? p.strongEmotionIds
+            : [...p.strongEmotionIds, action.id]
+        return { ...p, strongEmotionIds }
       })
     }
 
     case 'remove_strong_emotion': {
       return updateActivePass(state, (p) => ({
         ...p,
-        strongestEmotionIds: p.strongestEmotionIds.filter((id) => id !== action.id),
+        strongEmotionIds: p.strongEmotionIds.filter((id) => id !== action.id),
       }))
     }
 
     case 'move_up_emotion': {
       return updateActivePass(state, (p) => {
-        if (p.strongestEmotionIds.length <= 1) return p
-        const index = p.strongestEmotionIds.indexOf(action.id)
+        if (p.strongEmotionIds.length <= 1) return p
+        const index = p.strongEmotionIds.indexOf(action.id)
         if (index === -1) return p
-        const strongestEmotionIds = [...p.strongestEmotionIds]
+        const strongEmotionIds = [...p.strongEmotionIds]
         const targetIndex =
-          index === 0 ? strongestEmotionIds.length - 1 : index - 1
-        ;[strongestEmotionIds[index], strongestEmotionIds[targetIndex]] = [
-          strongestEmotionIds[targetIndex],
-          strongestEmotionIds[index],
+          index === 0 ? strongEmotionIds.length - 1 : index - 1
+        ;[strongEmotionIds[index], strongEmotionIds[targetIndex]] = [
+          strongEmotionIds[targetIndex],
+          strongEmotionIds[index],
         ]
-        return { ...p, strongestEmotionIds }
+        return { ...p, strongEmotionIds }
       })
     }
 
     case 'move_down_emotion': {
       return updateActivePass(state, (p) => {
-        if (p.strongestEmotionIds.length <= 1) return p
-        const index = p.strongestEmotionIds.indexOf(action.id)
+        if (p.strongEmotionIds.length <= 1) return p
+        const index = p.strongEmotionIds.indexOf(action.id)
         if (index === -1) return p
-        const strongestEmotionIds = [...p.strongestEmotionIds]
+        const strongEmotionIds = [...p.strongEmotionIds]
         const targetIndex =
-          index === strongestEmotionIds.length - 1 ? 0 : index + 1
-        ;[strongestEmotionIds[index], strongestEmotionIds[targetIndex]] = [
-          strongestEmotionIds[targetIndex],
-          strongestEmotionIds[index],
+          index === strongEmotionIds.length - 1 ? 0 : index + 1
+        ;[strongEmotionIds[index], strongEmotionIds[targetIndex]] = [
+          strongEmotionIds[targetIndex],
+          strongEmotionIds[index],
         ]
-        return { ...p, strongestEmotionIds }
+        return { ...p, strongEmotionIds }
       })
     }
 
@@ -143,14 +143,14 @@ export function findEmotionReducer(
     case 'clear_strong_emotions':
       return updateActivePass(state, (p) => ({
         ...p,
-        strongestEmotionIds: [],
-        strongestSinglePickId: null,
+        strongEmotionIds: [],
+        dominantEmotionId: null,
       }))
 
-    case 'clear_strongest_single':
+    case 'clear_dominant_emotion':
       return updateActivePass(state, (p) => ({
         ...p,
-        strongestSinglePickId: null,
+        dominantEmotionId: null,
       }))
 
     case 'set_session_trace': {

@@ -14,14 +14,14 @@ export function SummaryPage() {
   const dispatch = useFindEmotionDispatch()
   const { displayedPass, displayedPassIndex, state } = useMountedPass()
   const { passes } = state
-  const { strongestEmotionIds, strongestSinglePickId } = displayedPass
-  const primaryEmotionId =
-    strongestSinglePickId ??
-    (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)
+  const { strongEmotionIds, dominantEmotionId } = displayedPass
+  const dominantEmotionIdForDisplay =
+    dominantEmotionId ??
+    (strongEmotionIds.length === 1 ? strongEmotionIds[0] : null)
   const strongestEmotionName =
-    emotions.find((emotion) => emotion.id === primaryEmotionId)?.name ?? ''
-  const alsoEmotionIds = primaryEmotionId
-    ? strongestEmotionIds.filter((id) => id !== primaryEmotionId)
+    emotions.find((emotion) => emotion.id === dominantEmotionIdForDisplay)?.name ?? ''
+  const alsoEmotionIds = dominantEmotionIdForDisplay
+    ? strongEmotionIds.filter((id) => id !== dominantEmotionIdForDisplay)
     : []
 
   return (

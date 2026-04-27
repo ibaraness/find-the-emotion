@@ -8,10 +8,10 @@ type EmotionUnfoldedChainProps = {
 }
 
 function strongestEmotionNameFromPass(pass: Pass): string {
-  const primaryEmotionId =
-    pass.strongestSinglePickId ??
-    (pass.strongestEmotionIds.length === 1 ? pass.strongestEmotionIds[0] : null)
-  return emotions.find((emotion) => emotion.id === primaryEmotionId)?.name ?? ''
+  const dominantEmotionId =
+    pass.dominantEmotionId ??
+    (pass.strongEmotionIds.length === 1 ? pass.strongEmotionIds[0] : null)
+  return emotions.find((emotion) => emotion.id === dominantEmotionId)?.name ?? ''
 }
 
 export function EmotionUnfoldedChain({

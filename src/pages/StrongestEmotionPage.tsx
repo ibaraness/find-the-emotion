@@ -19,7 +19,7 @@ export function StrongestEmotionPage() {
   const resetOptionsOnConfirm = { discardFuturePasses: hasFuturePasses }
   const { displayedPass, mountedPassId } = useMountedPass()
   const { withPassContext } = useSessionPassGuard(mountedPassId)
-  const { strongestEmotionIds, strongestSinglePickId } = displayedPass
+  const { strongEmotionIds, dominantEmotionId } = displayedPass
   const dispatch = useFindEmotionDispatch()
   const {
     isDialogOpen,
@@ -32,13 +32,13 @@ export function StrongestEmotionPage() {
     resetOptionsOnConfirm,
   })
 
-  const effectivePick =
-    strongestSinglePickId ??
-    (strongestEmotionIds.length === 1 ? strongestEmotionIds[0] : null)
+  const selectedDominantEmotionId =
+    dominantEmotionId ??
+    (strongEmotionIds.length === 1 ? strongEmotionIds[0] : null)
 
   const requestSetStrongest = (id: string) => {
     handleActionRequest(() =>
-      withPassContext(() => dispatch({ type: 'set_strongest_single', id })),
+      withPassContext(() => dispatch({ type: 'set_dominant_emotion', id })),
     )
   }
 
@@ -59,14 +59,14 @@ export function StrongestEmotionPage() {
       <p className="text-base text-text-primary italic font-light mb-8">
         Take your time. Notice what stands out.
       </p>
-      {strongestEmotionIds.map((emotionId) => {
+      {strongEmotionIds.map((emotionId) => {
         const emotion = emotions.find((e) => e.id === emotionId)
         if (!emotion) return null
         return (
           <div key={emotionId} className="px-4 py-2">
             <SelectableChip
               label={emotion.name}
-              selected={effectivePick === emotionId}
+              selected={selectedDominantEmotionId === emotionId}
               onChange={() => requestSetStrongest(emotionId)}
             />
           </div>
@@ -76,7 +76,7 @@ export function StrongestEmotionPage() {
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('pause')}
-          disabled={effectivePick == null}
+          disabled={selectedDominantEmotionId == null}
         />
       </div>
     </PageSection>

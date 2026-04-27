@@ -33,7 +33,7 @@ export function RefinedEmotionsPage() {
   }
   const { displayedPass, mountedPassId } = useMountedPass()
   const { withPassContext } = useSessionPassGuard(mountedPassId)
-  const { selectedEmotionIds, strongestEmotionIds } = displayedPass
+  const { selectedEmotionIds, strongEmotionIds } = displayedPass
   const dispatch = useFindEmotionDispatch()
   const {
     isDialogOpen,
@@ -53,10 +53,10 @@ export function RefinedEmotionsPage() {
   };
 
   const slots: (string | null)[] = [0, 1, 2].map(
-    i => strongestEmotionIds[i] ?? null
+    i => strongEmotionIds[i] ?? null
   );
   const availableEmotionIds = selectedEmotionIds.filter(
-    (id) => !strongestEmotionIds.includes(id)
+    (id) => !strongEmotionIds.includes(id)
   );
 
   const requestAddStrongEmotion = (id: string) => {
@@ -148,14 +148,14 @@ export function RefinedEmotionsPage() {
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('strongest-emotion')}
-          disabled={strongestEmotionIds.length === 0}
+          disabled={strongEmotionIds.length === 0}
         />
       </MobileBottomAction>
       <div className="mt-8 hidden pb-20 md:block">
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('strongest-emotion')}
-          disabled={strongestEmotionIds.length === 0}
+          disabled={strongEmotionIds.length === 0}
         />
       </div>
     </PageSection>
