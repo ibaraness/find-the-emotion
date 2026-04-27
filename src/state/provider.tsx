@@ -1,9 +1,13 @@
-import { useReducer, type ReactNode } from "react"
+import { useEffect, useReducer, type ReactNode } from "react"
 import type { FindEmotionState, Pass } from "./types"
 import { findEmotionReducer } from "./reducer"
 import { FindEmotionStateContext } from "./context"
 import { FindEmotionDispatchContext } from "./context"
 import { LogFindEmotionState } from "./dev/LogFindEmotionState"
+import {
+  readPersistedFindEmotionState,
+  writePersistedFindEmotionState,
+} from "./sessionStorageState"
 
 const defaultPass: Pass = {
   id: "1",
@@ -21,8 +25,24 @@ const initialState: FindEmotionState = {
   direction: 1,
 }
 
+function getDefaultState(): FindEmotionState {
+  return { ...initialState, passes: [{ ...defaultPass }] }
+}
+
+function initFindEmotionState(): FindEmotionState {
+  return readPersistedFindEmotionState() ?? getDefaultState()
+}
+
 export function FindEmotionProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(findEmotionReducer, initialState)
+  const [state, dispatch] = useReducer(
+    findEmotionReducer,
+    undefined,
+    initFindEmotionState,
+  )
+
+  useEffect(() => {
+    writePersistedFindEmotionState(state)
+  }, [state])
 
   return (
     <FindEmotionStateContext.Provider value={state}>
