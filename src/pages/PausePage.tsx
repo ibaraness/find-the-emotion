@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
-import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
+import { ResponsiveBottomActions } from '@/components/ResponsiveBottomActions'
 import { usePageStack } from '@/navigation/PageStackContext'
 import distortedHeartSmall from '@/assets/distorted-heart-small.webp'
 import {
@@ -88,14 +88,10 @@ export function PausePage() {
           </div>
         </div>
 
-      <MobileBottomAction position="fixed">
+      <ResponsiveBottomActions desktopClassName="mt-8 hidden pb-20 pt-8 md:block">
         <div className="mb-4"><PrimaryButton label="Continue to summary" onClick={() => pushPage('summary')} /></div>
         <div className="mb-4"><SecondaryButton label={secondaryCTALabel} onClick={onSecondary} /></div>
-      </MobileBottomAction>
-      <div className="mt-8 hidden pb-20 pt-8 md:block">
-        <div className="mb-4"><PrimaryButton label="Continue to summary" onClick={() => pushPage('summary')} /></div>
-        <div className="mb-4"><SecondaryButton label={secondaryCTALabel} onClick={onSecondary} /></div>
-      </div>
+      </ResponsiveBottomActions>
     </PageSection>
   )
 }

@@ -1,8 +1,8 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
 import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
-import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
+import { ResponsiveBottomActions } from '@/components/ResponsiveBottomActions'
 import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
@@ -98,20 +98,13 @@ export function MyEmotionsPage() {
           </div>
         ))}
       </div>
-      <MobileBottomAction position="fixed">
+      <ResponsiveBottomActions>
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('refined-emotions')}
           disabled={selectedEmotionIds.length === 0}
         />
-      </MobileBottomAction>
-      <div className="mt-8 hidden pb-20 md:block">
-        <PrimaryButton
-          label="Continue"
-          onClick={() => pushPage('refined-emotions')}
-          disabled={selectedEmotionIds.length === 0}
-        />
-      </div>
+      </ResponsiveBottomActions>
     </PageSection>
   )
 }

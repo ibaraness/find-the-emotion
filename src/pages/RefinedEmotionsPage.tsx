@@ -1,10 +1,10 @@
 import { Breadcrumb } from '@/components/Breadcrumb'
 import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
-import { MobileBottomAction } from '@/components/MobileBottomAction'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { RankedEmotionSlot } from '@/components/RankedEmotionSlot'
 import { AddEmotionRow } from '@/components/AddEmotionRow'
+import { ResponsiveBottomActions } from '@/components/ResponsiveBottomActions'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePageStack } from '@/navigation/PageStackContext'
 import {
@@ -144,20 +144,13 @@ export function RefinedEmotionsPage() {
         </AnimatePresence>
 
       </div>
-      <MobileBottomAction position="fixed">
+      <ResponsiveBottomActions>
         <PrimaryButton
           label="Continue"
           onClick={() => pushPage('strongest-emotion')}
           disabled={strongEmotionIds.length === 0}
         />
-      </MobileBottomAction>
-      <div className="mt-8 hidden pb-20 md:block">
-        <PrimaryButton
-          label="Continue"
-          onClick={() => pushPage('strongest-emotion')}
-          disabled={strongEmotionIds.length === 0}
-        />
-      </div>
+      </ResponsiveBottomActions>
     </PageSection>
   )
 }
