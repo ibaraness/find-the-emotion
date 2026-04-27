@@ -1,4 +1,5 @@
 import type { FindEmotionState, Pass } from '@/state/types'
+import { normalizePass } from '@/state/reducer/normalizePass'
 
 export function createNewPass(): Pass {
   return {
@@ -16,6 +17,8 @@ export function updateActivePass(
 ): FindEmotionState {
   const i = state.activePass
   if (i < 0 || i >= state.passes.length) return state
-  const nextPasses = state.passes.map((p, idx) => (idx === i ? update(p) : p))
+  const nextPasses = state.passes.map((p, idx) =>
+    idx === i ? normalizePass(update(p)) : p,
+  )
   return { ...state, passes: nextPasses }
 }
