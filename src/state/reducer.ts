@@ -120,20 +120,6 @@ export function findEmotionReducer(
       })
     }
 
-    case 'next_step':
-      return {
-        ...state,
-        currentStep: action.nextStep,
-        direction: 1,
-      }
-
-    case 'prev_step':
-      return {
-        ...state,
-        currentStep: action.prevStep,
-        direction: -1,
-      }
-
     case 'clear_states':
       return updateActivePass(state, (p) => ({ ...p, selectedStateIds: [] }))
 

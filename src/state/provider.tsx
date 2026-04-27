@@ -14,7 +14,6 @@ const defaultPass: Pass = {
 }
 
 const initialState: FindEmotionState = {
-  currentStep: "welcome",
   passes: [defaultPass],
   activePass: 0,
   history: [],

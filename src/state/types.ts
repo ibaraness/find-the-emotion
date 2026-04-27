@@ -1,5 +1,3 @@
-export type Step = 'welcome' | 'state' | 'emotion' | 'refine' | 'summary';
-
 /**
  * Route ids — match keys in `pageRegistry` (kept in sync by convention).
  * When you add a page, add its id here and to the registry.
@@ -30,7 +28,6 @@ export type Pass = {
 }
 
 export type FindEmotionState = {
-  currentStep: Step
   /** Ordered passes; all flow data lives here per pass. */
   passes: Pass[]
   /** Index into `passes` for the pass being edited. */
@@ -54,8 +51,6 @@ export type FindEmotionAction =
   | { type: "move_up_emotion"; id: string }
   | { type: "move_down_emotion"; id: string }
   | { type: "remove_strong_emotion"; id: string }
-  | { type: "next_step"; nextStep: Step }
-  | { type: "prev_step"; prevStep: Step }
   | { type: "clear_states" }
   | { type: "clear_emotions" }
   | { type: "clear_strong_emotions" }
