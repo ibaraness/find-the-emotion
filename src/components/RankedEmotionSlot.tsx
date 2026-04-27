@@ -7,6 +7,8 @@ export type RankedEmotionSlotProps = {
   onRemove: () => void
   moveUp: () => void
   moveDown: () => void
+  /** When true, shows up/down controls when a slot has a selection. Default false. */
+  showArrowButtons?: boolean
   disabled?: boolean
 }
 
@@ -17,6 +19,7 @@ export function RankedEmotionSlot({
   onRemove,
   moveUp,
   moveDown,
+  showArrowButtons = false,
   disabled = false,
 }: RankedEmotionSlotProps) {
   const hasSelection = Boolean(emotionLabel?.trim())
@@ -45,7 +48,7 @@ export function RankedEmotionSlot({
           </span>
         </button>
 
-        {hasSelection ? (
+        {hasSelection && showArrowButtons ? (
           <div className="mr-2 flex items-center gap-1">
             <button
               type="button"
@@ -71,6 +74,7 @@ export function RankedEmotionSlot({
 
       {hasSelection ? (
         <button
+        
           type="button"
           disabled={disabled}
           aria-label="Remove emotion slot"

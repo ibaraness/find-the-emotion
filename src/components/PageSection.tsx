@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 const shell =
-  'mx-auto flex w-full max-w-md flex-1 flex-col pt-8 pb-20 min-h-0 flex-1 overflow-y-auto overscroll-y-contain'
+  'mx-auto flex w-full max-w-md flex-1 flex-col pt-8 pb-20 min-h-0 flex-1 '
 
 const paddingClass = {
   narrow: 'px-3',

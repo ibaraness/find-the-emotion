@@ -3,59 +3,34 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type ReactNode,
 } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
+import type { HistoryEntry, Screen } from '@/state/types'
+import {
+  HISTORY_STACK_KEY,
+  SESSION_HISTORY_KEY,
+  buildSessionTraceFromState,
+  mergeHistoryState,
+} from './historyState'
 import {
   INITIAL_PAGE_ID,
   isRegisteredPageId,
   pageRegistry,
   type PageId,
 } from './pageRegistry'
-
-/** Key on `history.state` holding `PageId[]` for browser back/forward sync. */
-export const HISTORY_STACK_KEY = 'appStack' as const
-
-export type Direction = 1 | -1
-
-function sanitizeStack(raw: unknown): PageId[] {
-  if (!Array.isArray(raw)) return [INITIAL_PAGE_ID]
-  const ids = raw.filter(
-    (x): x is PageId => typeof x === 'string' && isRegisteredPageId(x),
-  )
-  if (ids.length === 0) return [INITIAL_PAGE_ID]
-  return ids
-}
-
-function mergeHistoryState(patch: Record<string, unknown>): Record<string, unknown> {
-  const cur = window.history.state
-  if (cur && typeof cur === 'object' && !Array.isArray(cur)) {
-    return { ...(cur as Record<string, unknown>), ...patch }
-  }
-  return patch
-}
-
-function readStackFromHistory(): PageId[] | undefined {
-  const s = window.history.state
-  if (!s || typeof s !== 'object' || Array.isArray(s)) return undefined
-  const raw = (s as Record<string, unknown>)[HISTORY_STACK_KEY]
-  return raw !== undefined ? sanitizeStack(raw) : undefined
-}
-
-type PageStackContextValue = {
-  currentPageId: PageId
-  /** Stable key for the visible stack path (depth + route). */
-  stackKey: string
-  canGoBack: boolean
-  /** Last navigation direction: used by the shell for slide axis (1 forward, -1 back). */
-  navigationDirection: Direction
-  pushPage: (id: PageId) => void
-  popPage: () => void
-}
+import { pageMetaTitleById } from './pageMeta'
+import type {
+  Direction,
+  PageStackContextValue,
+  PushPageOptions,
+} from './types'
+import { useInitializePageStack } from './useInitializePageStack'
+import { useSyncStackFromPopstate } from './useSyncStackFromPopstate'
 
 const PageStackContext = createContext<PageStackContextValue | null>(null)
 
@@ -71,73 +46,104 @@ const slideVariants = {
   }),
 }
 
-const pageMetaTitleById: Record<PageId, string> = {
-  welcome: 'Find the Emotion',
-  'my-state': 'Find the Emotion · What feels closest right now?',
-  'my-emotions': 'Find the Emotion · What feels true for you right now?',
-  'refined-emotions': 'Find the Emotion · Which feels the strongest?',
-  summary: 'Find the Emotion · What feels strongest right now is',
-}
-
+/**
+ * Must render inside `FindEmotionProvider` so pushes can store `passIndex` in
+ * `sessionHistory` next to `appStack` on the same `history.state` object.
+ */
 export function PageStackProvider({ children }: { children: ReactNode }) {
+  const { activePass } = useFindEmotionState()
+  const dispatch = useFindEmotionDispatch()
   const [stack, setStack] = useState<PageId[]>([INITIAL_PAGE_ID])
   const [direction, setDirection] = useState<Direction>(1)
   const stackRef = useRef(stack)
   stackRef.current = stack
+  const pendingPruneAfterGoBackRef = useRef(false)
+  const pruneFallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const currentPageId = stack[stack.length - 1] ?? INITIAL_PAGE_ID
 
-  useLayoutEffect(() => {
-    const fromHistory = readStackFromHistory()
-    if (fromHistory) {
-      setStack(fromHistory)
-      return
-    }
-    const initial = [INITIAL_PAGE_ID]
-    window.history.replaceState(
-      mergeHistoryState({ [HISTORY_STACK_KEY]: initial }),
-      '',
-      window.location.href,
-    )
-  }, [])
+  // On first mount, hydrate stack/trace from browser history or seed initial root state.
+  useInitializePageStack({ setStack, dispatch })
+  
+  // Keep stack/trace synchronized with browser back-forward events and finalize root-prune flow.
+  useSyncStackFromPopstate({
+    stackRef,
+    setStack,
+    setDirection,
+    dispatch,
+    pendingPruneAfterGoBackRef,
+    pruneFallbackTimerRef,
+  })
 
-  useEffect(() => {
-    const onPopState = (e: PopStateEvent) => {
-      const raw =
-        e.state && typeof e.state === 'object' && !Array.isArray(e.state)
-          ? (e.state as Record<string, unknown>)[HISTORY_STACK_KEY]
-          : undefined
-      const next = sanitizeStack(raw)
-      const prevLen = stackRef.current.length
-      setDirection(next.length < prevLen ? -1 : 1)
-      setStack(next)
-    }
-    window.addEventListener('popstate', onPopState)
-    return () => window.removeEventListener('popstate', onPopState)
-  }, [])
-
+  // Keep browser tab title in sync with the currently visible page.
   useEffect(() => {
     document.title = pageMetaTitleById[currentPageId]
   }, [currentPageId])
 
-  const pushPage = useCallback((id: PageId) => {
-    if (!isRegisteredPageId(id)) return
-    const next = [...stackRef.current, id]
-    setDirection(1)
-    window.history.pushState(
-      mergeHistoryState({ [HISTORY_STACK_KEY]: next }),
-      '',
-      window.location.href,
-    )
-    stackRef.current = next
-    setStack(next)
-  }, [])
+  const pushPage = useCallback(
+    (id: PageId, options?: PushPageOptions) => {
+      if (!isRegisteredPageId(id)) return
+      const passIndexForNewEntry = options?.passIndex ?? activePass
+      const currentStack = stackRef.current
+      const prevSession = buildSessionTraceFromState(window.history.state, currentStack)
+      const nextStack = [...currentStack, id]
+      const nextSession: HistoryEntry[] = [
+        ...prevSession,
+        { passIndex: passIndexForNewEntry, screen: id as Screen },
+      ]
+      setDirection(1)
+      window.history.pushState(
+        mergeHistoryState({
+          [HISTORY_STACK_KEY]: nextStack,
+          [SESSION_HISTORY_KEY]: nextSession,
+        }),
+        '',
+        window.location.href,
+      )
+      stackRef.current = nextStack
+      setStack(nextStack)
+      dispatch({ type: 'set_session_trace', history: nextSession })
+    },
+    [activePass, dispatch],
+  )
 
   const popPage = useCallback(() => {
     if (stackRef.current.length <= 1) return
     window.history.back()
   }, [])
 
-  const value = useMemo<PageStackContextValue>(() => {
+  const resetPageStackToRoot = useCallback(() => {
+    const target = INITIAL_PAGE_ID
+    const currentStack = stackRef.current
+    if (currentStack.length <= 1) {
+      window.history.replaceState(
+        mergeHistoryState({
+          [HISTORY_STACK_KEY]: [target],
+          [SESSION_HISTORY_KEY]: [] satisfies HistoryEntry[],
+        }),
+        '',
+        window.location.href,
+      )
+      if (currentStack[0] === target) {
+        dispatch({ type: 'set_session_trace', history: [] })
+        return
+      }
+      setDirection(1)
+      stackRef.current = [target]
+      setStack([target])
+      dispatch({ type: 'set_session_trace', history: [] })
+      return
+    }
+    const stepsBack = currentStack.length - 1
+    pendingPruneAfterGoBackRef.current = true
+    if (pruneFallbackTimerRef.current) clearTimeout(pruneFallbackTimerRef.current)
+    pruneFallbackTimerRef.current = setTimeout(() => {
+      pruneFallbackTimerRef.current = null
+      pendingPruneAfterGoBackRef.current = false
+    }, 400)
+    window.history.go(-stepsBack)
+  }, [dispatch])
+
+  const contextValue = useMemo<PageStackContextValue>(() => {
     return {
       currentPageId,
       stackKey: stack.join('/'),
@@ -145,11 +151,12 @@ export function PageStackProvider({ children }: { children: ReactNode }) {
       navigationDirection: direction,
       pushPage,
       popPage,
+      resetPageStackToRoot,
     }
-  }, [currentPageId, stack, direction, pushPage, popPage])
+  }, [currentPageId, stack, direction, pushPage, popPage, resetPageStackToRoot])
 
   return (
-    <PageStackContext.Provider value={value}>{children}</PageStackContext.Provider>
+    <PageStackContext.Provider value={contextValue}>{children}</PageStackContext.Provider>
   )
 }
 
@@ -159,7 +166,7 @@ export function PageStackOutlet() {
   const Page = pageRegistry[currentPageId]
 
   return (
-    <div className="relative min-h-0 flex-1 overflow-hidden flex h-[100svh] flex-col md:h-[100dvh]">
+    <div className="relative min-h-0 flex-1 overflow-hidden">
       <AnimatePresence initial={false} custom={navigationDirection}>
         <motion.div
           key={stackKey}
@@ -170,9 +177,11 @@ export function PageStackOutlet() {
           animate="center"
           exit="exit"
           transition={slideTransition}
-          className="absolute inset-0 flex min-h-0 flex-col overflow-y-auto bg-transparent"
+          className="absolute inset-0 flex min-h-0 flex-col bg-transparent"
         >
-          <Page />
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <Page />
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>

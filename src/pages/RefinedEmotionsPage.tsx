@@ -1,17 +1,50 @@
+import { Breadcrumb } from '@/components/Breadcrumb'
+import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { RankedEmotionSlot } from '@/components/RankedEmotionSlot'
 import { AddEmotionRow } from '@/components/AddEmotionRow'
+import { ResponsiveBottomActions } from '@/components/ResponsiveBottomActions'
 import { AnimatePresence, motion } from 'motion/react'
 import { usePageStack } from '@/navigation/PageStackContext'
-import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
-import { emotions } from '@/config/emotions'
+import {
+  useFindEmotionDispatch,
+  useFindEmotionState,
+} from '@/state/context'
+import {
+  selectHasFuturePasses,
+  selectHasStrongestSinglePick,
+} from '@/state/selectors'
+import { useMountedPass } from '@/state/useMountedPass'
+import { useSessionPassGuard } from '@/state/useSessionPassGuard'
+import { useFlowResetConfirm } from '@/state/useFlowResetConfirm'
+import { getEmotionNameById } from '@/config/emotions'
 
 /** Skeleton for refined emotions step — no chip list, ready for custom ranked UI. */
 export function RefinedEmotionsPage() {
   const { pushPage } = usePageStack()
-  const { selectedEmotionIds, strongestEmotionIds } = useFindEmotionState()
+  const state = useFindEmotionState()
+  const hasFuturePasses = selectHasFuturePasses(state)
+  const hasStrongestPick = selectHasStrongestSinglePick(state)
+  const shouldConfirm = hasFuturePasses || hasStrongestPick
+  const resetOptionsOnConfirm = {
+    discardFuturePasses: hasFuturePasses,
+    clearStrongestSingle: hasStrongestPick,
+  }
+  const { displayedPass, mountedPassId } = useMountedPass()
+  const { withPassContext } = useSessionPassGuard(mountedPassId)
+  const { selectedEmotionIds, strongEmotionIds } = displayedPass
   const dispatch = useFindEmotionDispatch()
+  const {
+    isDialogOpen,
+    handleActionRequest,
+    onCancel,
+    onConfirm,
+  } = useFlowResetConfirm({
+    dispatch,
+    shouldConfirm,
+    resetOptionsOnConfirm,
+  })
 
   const getRank = (index: number): "1" | "2" | "3" => {
     if (index === 0) return "1";
@@ -20,22 +53,37 @@ export function RefinedEmotionsPage() {
   };
 
   const slots: (string | null)[] = [0, 1, 2].map(
-    i => strongestEmotionIds[i] ?? null
+    i => strongEmotionIds[i] ?? null
   );
   const availableEmotionIds = selectedEmotionIds.filter(
-    (id) => !strongestEmotionIds.includes(id)
+    (id) => !strongEmotionIds.includes(id)
   );
 
+  const requestAddStrongEmotion = (id: string) => {
+    handleActionRequest(() =>
+      withPassContext(() => dispatch({ type: 'add_strong_emotion', id })),
+    )
+  }
+
+  const requestRemoveStrongEmotion = (id: string) => {
+    handleActionRequest(() =>
+      withPassContext(() => dispatch({ type: 'remove_strong_emotion', id })),
+    )
+  }
+
   return (
-    <PageSection padding="narrow" textCenter>
-      <div className="mt-4 mb-10 text-center text-[clamp(12px,3.26vw,15px)] text-text-primary">
-        STEP 3: REFINED EMOTIONS
-      </div>
+    <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
+      <FlowResetConfirmDialog
+        open={isDialogOpen}
+        onCancel={onCancel}
+        onConfirm={() => withPassContext(onConfirm)}
+      />
+      <Breadcrumb className='uppercase' label="What I’m really feeling" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
-      Which feels the strongest?
+      Narrow it down
       </h1>
       <div className="mb-4 text-base text-text-primary">
-      Pick up to 3, starting with what feels strongest
+      Choose up to 3 that feel strongest. No need to rank yet.
       </div>
       <div className="mt-8 px-5 flex flex-col gap-4">
         <AnimatePresence initial={false} mode="popLayout">
@@ -50,16 +98,25 @@ export function RefinedEmotionsPage() {
             >
               <RankedEmotionSlot
                 rank={getRank(index)}
-                emotionLabel={emotionId ? emotions.find((emotion) => emotion.id === emotionId)?.name ?? '' : ''}
+                emotionLabel={getEmotionNameById(emotionId)}
+                showArrowButtons={false}
                 onSelectEmotion={() => {}}
                 onRemove={() => {
-                  if (emotionId) dispatch({ type: 'remove_strong_emotion', id: emotionId })
+                  if (emotionId) requestRemoveStrongEmotion(emotionId)
                 }}
                 moveUp={() => {
-                  if (emotionId) dispatch({ type: 'move_up_emotion', id: emotionId })
+                  if (emotionId) {
+                    withPassContext(() =>
+                      dispatch({ type: 'move_up_emotion', id: emotionId }),
+                    )
+                  }
                 }}
                 moveDown={() => {
-                  if (emotionId) dispatch({ type: 'move_down_emotion', id: emotionId })
+                  if (emotionId) {
+                    withPassContext(() =>
+                      dispatch({ type: 'move_down_emotion', id: emotionId }),
+                    )
+                  }
                 }}
               />
             </motion.div>
@@ -79,21 +136,21 @@ export function RefinedEmotionsPage() {
               transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.55 }}
             >
               <AddEmotionRow
-                label={emotions.find((emotion) => emotion.id === emotionId)?.name ?? ''}
-                onAddition={() => dispatch({ type: 'add_strong_emotion', id: emotionId })}
+                label={getEmotionNameById(emotionId)}
+                onAddition={() => requestAddStrongEmotion(emotionId)}
               />
             </motion.div>
           ))}
         </AnimatePresence>
 
       </div>
-      <div className="mt-8">
+      <ResponsiveBottomActions>
         <PrimaryButton
           label="Continue"
-          onClick={() => pushPage('summary')}
-          disabled={strongestEmotionIds.length === 0}
+          onClick={() => pushPage('strongest-emotion')}
+          disabled={strongEmotionIds.length === 0}
         />
-      </div>
+      </ResponsiveBottomActions>
     </PageSection>
   )
 }

@@ -1,12 +1,14 @@
 import { AppHeader } from './components/AppHeader'
 import { PageStackOutlet, PageStackProvider } from '@/navigation/PageStackContext'
+import { PassSessionInvalidProvider } from '@/state/PassSessionInvalidContext'
 import { FindEmotionProvider } from './state/provider'
 import backgroundImage from './assets/background.webp'
 
 function App() {
   return (
-    <PageStackProvider>
-      <FindEmotionProvider>
+    <FindEmotionProvider>
+      <PassSessionInvalidProvider>
+      <PageStackProvider>
         <div
           className="flex min-h-screen flex-col bg-background bg-cover bg-center text-text-primary"
           style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -16,8 +18,9 @@ function App() {
             <PageStackOutlet />
           </main>
         </div>
-      </FindEmotionProvider>
-    </PageStackProvider>
+      </PageStackProvider>
+      </PassSessionInvalidProvider>
+    </FindEmotionProvider>
   )
 }
 
