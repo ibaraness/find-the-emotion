@@ -1,5 +1,6 @@
 import { isObjectRecord } from '@/lib/typeGuards'
 import { isRegisteredPageId } from '@/navigation/pageRegistry'
+import { normalizePass } from '@/state/reducer/normalizePass'
 import type { FindEmotionState, HistoryEntry, Pass } from './types'
 
 const STORAGE_KEY = 'find-the-emotion:session'
@@ -69,7 +70,10 @@ export function readPersistedFindEmotionState(): FindEmotionState | null {
     if (!isObjectRecord(parsed) || parsed.v !== VERSION) return null
     const candidate = (parsed as Partial<PersistedShape>).state
     if (!isFindEmotionState(candidate)) return null
-    return candidate
+    return {
+      ...candidate,
+      passes: candidate.passes.map(normalizePass),
+    }
   } catch {
     return null
   }
