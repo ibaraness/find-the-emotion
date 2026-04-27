@@ -9,7 +9,7 @@ import {
 } from '@/state/context'
 import { useMountedPass } from '@/state/useMountedPass'
 import { useSessionPassGuard } from '@/state/useSessionPassGuard'
-import { emotions } from '@/config/emotions'
+import { getEmotionNameById } from '@/config/emotions'
 import { Check } from 'lucide-react'
 import { SecondaryButton } from '@/components/SecondaryButton'
 import { flushSync } from 'react-dom'
@@ -28,8 +28,7 @@ export function PausePage() {
   const dominantEmotionIdForDisplay =
     dominantEmotionId ??
     (strongEmotionIds.length === 1 ? strongEmotionIds[0] : null)
-  const strongestEmotionName =
-    emotions.find((emotion) => emotion.id === dominantEmotionIdForDisplay)?.name ?? ''
+  const strongestEmotionName = getEmotionNameById(dominantEmotionIdForDisplay)
 
   const onMoreHere = () => {
     const newPassIndex = passes.length

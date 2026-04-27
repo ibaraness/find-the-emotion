@@ -1,4 +1,4 @@
-import { emotions } from '@/config/emotions'
+import { getEmotionNameById } from '@/config/emotions'
 import type { Pass } from '@/state/types'
 import { ChevronRight } from 'lucide-react'
 
@@ -11,7 +11,7 @@ function strongestEmotionNameFromPass(pass: Pass): string {
   const dominantEmotionId =
     pass.dominantEmotionId ??
     (pass.strongEmotionIds.length === 1 ? pass.strongEmotionIds[0] : null)
-  return emotions.find((emotion) => emotion.id === dominantEmotionId)?.name ?? ''
+  return getEmotionNameById(dominantEmotionId)
 }
 
 export function EmotionUnfoldedChain({

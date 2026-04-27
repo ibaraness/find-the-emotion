@@ -2,7 +2,7 @@ import { Breadcrumb } from '@/components/Breadcrumb'
 import { EmotionUnfoldedChain } from '@/components/EmotionUnfoldedChain'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
-import { emotions } from '@/config/emotions'
+import { getEmotionNameById } from '@/config/emotions'
 import { Check } from 'lucide-react'
 import { usePageStack } from '@/navigation/PageStackContext'
 import { useFindEmotionDispatch } from '@/state/context'
@@ -18,8 +18,7 @@ export function SummaryPage() {
   const dominantEmotionIdForDisplay =
     dominantEmotionId ??
     (strongEmotionIds.length === 1 ? strongEmotionIds[0] : null)
-  const strongestEmotionName =
-    emotions.find((emotion) => emotion.id === dominantEmotionIdForDisplay)?.name ?? ''
+  const strongestEmotionName = getEmotionNameById(dominantEmotionIdForDisplay)
   const alsoEmotionIds = dominantEmotionIdForDisplay
     ? strongEmotionIds.filter((id) => id !== dominantEmotionIdForDisplay)
     : []
@@ -48,7 +47,7 @@ export function SummaryPage() {
             {alsoEmotionIds.map((emotionId) => (
               <div key={emotionId} className="flex items-center gap-2 text-left">
                 <Check size={16} className="text-primary" />
-                {emotions.find((emotion) => emotion.id === emotionId)?.name ?? ''}
+                {getEmotionNameById(emotionId)}
               </div>
             ))}
           </div>

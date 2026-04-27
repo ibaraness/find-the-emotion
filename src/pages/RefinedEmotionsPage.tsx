@@ -18,7 +18,7 @@ import {
 import { useMountedPass } from '@/state/useMountedPass'
 import { useSessionPassGuard } from '@/state/useSessionPassGuard'
 import { useFlowResetConfirm } from '@/state/useFlowResetConfirm'
-import { emotions } from '@/config/emotions'
+import { getEmotionNameById } from '@/config/emotions'
 
 /** Skeleton for refined emotions step — no chip list, ready for custom ranked UI. */
 export function RefinedEmotionsPage() {
@@ -98,7 +98,7 @@ export function RefinedEmotionsPage() {
             >
               <RankedEmotionSlot
                 rank={getRank(index)}
-                emotionLabel={emotionId ? emotions.find((emotion) => emotion.id === emotionId)?.name ?? '' : ''}
+                emotionLabel={getEmotionNameById(emotionId)}
                 showArrowButtons={false}
                 onSelectEmotion={() => {}}
                 onRemove={() => {
@@ -136,7 +136,7 @@ export function RefinedEmotionsPage() {
               transition={{ type: 'spring', stiffness: 420, damping: 34, mass: 0.55 }}
             >
               <AddEmotionRow
-                label={emotions.find((emotion) => emotion.id === emotionId)?.name ?? ''}
+                label={getEmotionNameById(emotionId)}
                 onAddition={() => requestAddStrongEmotion(emotionId)}
               />
             </motion.div>

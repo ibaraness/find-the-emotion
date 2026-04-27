@@ -4,7 +4,7 @@ import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { ResponsiveBottomActions } from '@/components/ResponsiveBottomActions'
 import { SelectableChip } from '@/components/SelectableChip'
-import { emotions } from '@/config/emotions'
+import { emotions, getEmotionNameById } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
 import {
   useFindEmotionDispatch,
@@ -28,8 +28,7 @@ function primaryStrongestEmotionName(pass: Pass): string {
       : null) ??
     pass.strongEmotionIds[0] ??
     null
-  if (!id) return ''
-  return emotions.find((e) => e.id === id)?.name ?? ''
+  return getEmotionNameById(id)
 }
 
 export function MyEmotionsPage() {

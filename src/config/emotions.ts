@@ -99,4 +99,18 @@ export const emotions = [
 ] as const;
 
 export type Emotion = (typeof emotions)[number]['id'];
+export type EmotionConfig = (typeof emotions)[number]
+
+export const emotionById: Record<Emotion, EmotionConfig> = Object.fromEntries(
+  emotions.map((emotion) => [emotion.id, emotion]),
+) as Record<Emotion, EmotionConfig>
+
+export function getEmotionById(id: string | null | undefined): EmotionConfig | null {
+  if (!id) return null
+  return emotionById[id as Emotion] ?? null
+}
+
+export function getEmotionNameById(id: string | null | undefined): string {
+  return getEmotionById(id)?.name ?? ''
+}
 

@@ -3,7 +3,7 @@ import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
 import { PageSection } from '@/components/PageSection'
 import { PrimaryButton } from '@/components/PrimaryButton'
 import { SelectableChip } from '@/components/SelectableChip'
-import { emotions } from '@/config/emotions'
+import { getEmotionNameById } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
 import { useFindEmotionDispatch, useFindEmotionState } from '@/state/context'
 import { selectHasFuturePasses } from '@/state/selectors'
@@ -60,12 +60,10 @@ export function StrongestEmotionPage() {
         Take your time. Notice what stands out.
       </p>
       {strongEmotionIds.map((emotionId) => {
-        const emotion = emotions.find((e) => e.id === emotionId)
-        if (!emotion) return null
         return (
           <div key={emotionId} className="px-4 py-2">
             <SelectableChip
-              label={emotion.name}
+              label={getEmotionNameById(emotionId)}
               selected={selectedDominantEmotionId === emotionId}
               onChange={() => requestSetStrongest(emotionId)}
             />
