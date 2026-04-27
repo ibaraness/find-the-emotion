@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Breadcrumb } from '@/components/Breadcrumb'
 import { FlowResetConfirmDialog } from '@/components/FlowResetConfirmDialog'
 import { MobileBottomAction } from '@/components/MobileBottomAction'
@@ -8,12 +7,17 @@ import { SelectableChip } from '@/components/SelectableChip'
 import { emotions } from '@/config/emotions'
 import { usePageStack } from '@/navigation/PageStackContext'
 import {
-  getActivePass,
   useFindEmotionDispatch,
   useFindEmotionState,
 } from '@/state/context'
+import {
+  selectHasAnyStrongEmotions,
+  selectHasFuturePasses,
+  selectHasStrongestSinglePick,
+} from '@/state/selectors'
 import { useMountedPass } from '@/state/useMountedPass'
 import { useSessionPassGuard } from '@/state/useSessionPassGuard'
+import { useFlowResetConfirm } from '@/state/useFlowResetConfirm'
 import type { Pass } from '@/state/types'
 
 function primaryStrongestEmotionName(pass: Pass): string {
@@ -31,18 +35,28 @@ function primaryStrongestEmotionName(pass: Pass): string {
 export function MyEmotionsPage() {
   const { pushPage } = usePageStack()
   const state = useFindEmotionState()
-  const { activePass, passes } = state
-  const passForEdit = getActivePass(state)
+  const { passes } = state
+  const hasFuturePasses = selectHasFuturePasses(state)
+  const hasRefineOrStrongestWork =
+    selectHasAnyStrongEmotions(state) || selectHasStrongestSinglePick(state)
+  const shouldConfirm = hasFuturePasses || hasRefineOrStrongestWork
+  const resetOptionsOnConfirm = {
+    discardFuturePasses: hasFuturePasses,
+    clearStrongEmotions: hasRefineOrStrongestWork,
+  }
   const { displayedPass, displayedPassIndex, mountedPassId } = useMountedPass()
   const { withPassContext } = useSessionPassGuard(mountedPassId)
   const dispatch = useFindEmotionDispatch()
-  const [pendingEmotionId, setPendingEmotionId] = useState<string | null>(null)
-  const hasFuturePasses = passes.length > 0 && activePass < passes.length - 1
-  const hasRefineOrStrongestWork =
-    passForEdit.strongestEmotionIds.length > 0 ||
-    passForEdit.strongestSinglePickId != null
-  const needsEmotionChangeWarning =
-    hasFuturePasses || hasRefineOrStrongestWork
+  const {
+    isDialogOpen,
+    handleActionRequest,
+    onCancel,
+    onConfirm,
+  } = useFlowResetConfirm({
+    dispatch,
+    shouldConfirm,
+    resetOptionsOnConfirm,
+  })
 
   const { selectedEmotionIds } = displayedPass
   const isFollowUpPass = displayedPassIndex > 0
@@ -56,34 +70,17 @@ export function MyEmotionsPage() {
       : 'What feels true for you right now?'
 
   const requestToggleEmotion = (id: string) => {
-    if (needsEmotionChangeWarning) {
-      setPendingEmotionId(id)
-      return
-    }
-    withPassContext(() => dispatch({ type: 'toggle_emotion', id }))
-  }
-
-  const onConfirmEmotionChange = () => {
-    if (!pendingEmotionId) return
-    const id = pendingEmotionId
-    setPendingEmotionId(null)
-    withPassContext(() => {
-      if (hasFuturePasses) {
-        dispatch({ type: 'discard_later_passes' })
-      }
-      if (hasRefineOrStrongestWork) {
-        dispatch({ type: 'clear_strong_emotions' })
-      }
-      dispatch({ type: 'toggle_emotion', id })
-    })
+    handleActionRequest(() =>
+      withPassContext(() => dispatch({ type: 'toggle_emotion', id })),
+    )
   }
 
   return (
     <PageSection padding="narrow" textCenter className="pb-[180px] md:pb-20">
       <FlowResetConfirmDialog
-        open={pendingEmotionId != null}
-        onCancel={() => setPendingEmotionId(null)}
-        onConfirm={onConfirmEmotionChange}
+        open={isDialogOpen}
+        onCancel={onCancel}
+        onConfirm={() => withPassContext(onConfirm)}
       />
       <Breadcrumb className='uppercase' label="What feels true right now" />
       <h1 className="mb-7 text-center text-[clamp(30px,8vw,48px)] font-normal leading-none tracking-tighter text-text-heading">
