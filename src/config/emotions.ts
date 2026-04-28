@@ -65,6 +65,22 @@ export const emotions = [
     name: 'Numbness',
   },
   {
+    id: "boredom",
+    name: "Boredom",
+  },
+  {
+    id: "apathy",
+    name: "Apathy",
+  },
+  {
+    id: "indifference",
+    name: "Indifference",
+  },
+  {
+    id: "discontentment",
+    name: "Discontentment",
+  },
+  {
     id: "hopelessness",
     name: 'Hopelessness',
   },
