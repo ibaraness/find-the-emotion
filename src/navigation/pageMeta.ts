@@ -3,7 +3,6 @@ import type { PageId } from './pageRegistry'
 /** Document title copy by route id. */
 export const pageMetaTitleById: Record<PageId, string> = {
   welcome: 'Find the Emotion',
-  intro: 'Find the Emotion · How this works',
   'my-state': 'Find the Emotion · What feels closest right now?',
   'my-emotions': 'Find the Emotion · What feels true for you right now?',
   'refined-emotions': 'Find the Emotion · Which feels the strongest?',

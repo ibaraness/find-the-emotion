@@ -38,7 +38,7 @@ export function WelcomePage() {
             dispatch({ type: 'clear_states' })
             dispatch({ type: 'clear_emotions' })
             dispatch({ type: 'clear_strong_emotions' })
-            pushPage('intro')
+            pushPage('my-state')
           }}
         />
       </div>
