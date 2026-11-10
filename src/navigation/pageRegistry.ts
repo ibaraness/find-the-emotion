@@ -1,4 +1,3 @@
-import { IntroPage } from '../pages/IntroPage'
 import { MyEmotionsPage } from '../pages/MyEmotionsPage'
 import { MyStatePage } from '../pages/MyStatePage'
 import { PausePage } from '../pages/PausePage'
@@ -14,7 +13,6 @@ import type { PageComponent } from './types'
  */
 export const pageRegistry = {
   welcome: WelcomePage,
-  intro: IntroPage,
   'my-state': MyStatePage,
   'my-emotions': MyEmotionsPage,
   'refined-emotions': RefinedEmotionsPage,

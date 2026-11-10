@@ -4,7 +4,6 @@
  */
 export type Screen =
   | 'welcome'
-  | 'intro'
   | 'my-state'
   | 'my-emotions'
   | 'refined-emotions'
